@@ -1,0 +1,44 @@
+import path = require('path');
+import cookieParser = require('cookie-parser');
+import cors = require('cors');
+import routers from './routes';
+import bodyParser = require('body-parser');
+import { Express } from 'express';
+import express = require('express');
+import { defaultErrorHandler } from './middleware/error';
+import { scheduleJobs } from './utils/schedule'; // 定时任务
+
+scheduleJobs();
+let port = 3001;
+
+if (process.env.NODE_ENV === 'development') {
+  console.log('当前环境是开发环境');
+} else {
+  port = 9000;
+  console.log('当前环境是生产环境');
+}
+const app: Express = express();
+
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/', routers);
+
+app.listen(port, () => {
+  console.log(`app listening at http://localhost:${port}`);
+});
+
+// error handler
+app.use(defaultErrorHandler);
+
+module.exports = app;
