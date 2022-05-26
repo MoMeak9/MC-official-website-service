@@ -5,60 +5,58 @@ const upload = require('../utils/cos');
 import sendMail from '../utils/sendMail';
 import { PrismaClient } from '@prisma/client';
 import { v4 } from 'uuid';
-import jwt from 'jsonwebtoken';
+import jwt = require('jsonwebtoken');
 import { PWD_SALT, PRIVATE_KEY, EXPIRES } from '../config';
+import {
+  AuthFailed,
+  ParameterException,
+  Success,
+} from '../utils/HttpException';
 
 const head = require('../utils/head');
-
 const prisma = new PrismaClient();
 
 export const login = async (req: Req, res: Res, next: Next) => {
-  try {
-    let { user_password } = req.body;
-    const { user_email } = req.body;
-    if (user_email == null || user_password == null) {
-      res.send(head.error('参数缺失'));
+  let { user_password } = req.body;
+  const { user_email } = req.body;
+  if (user_email == null || user_password == null) {
+    next(new ParameterException('参数缺失'));
+  } else {
+    user_password = md5(user_password + PWD_SALT);
+    const result = await prisma.user.findMany({
+      where: {
+        user_email,
+        user_password,
+      },
+      select: {
+        id: true,
+        user_game_id: true,
+        is_whitelist: true,
+        user_score: true,
+        user_email: true,
+        user_uuid: true,
+        user_QQ: true,
+      },
+    });
+    if (result.length === 0) {
+      next(new AuthFailed('用户名或密码错误'));
     } else {
-      user_password = md5(user_password + PWD_SALT);
-      const result = await prisma.user.findMany({
-        where: {
-          user_email,
-          user_password,
+      const token = jwt.sign(
+        {
+          id: result[0].id,
+          user_uuid: result[0].user_uuid,
+          user_game_id: result[0].user_game_id,
+          role: result[0],
         },
-        select: {
-          id: true,
-          user_game_id: true,
-          is_whitelist: true,
-          user_score: true,
-          user_email: true,
-          user_uuid: true,
-          user_QQ: true,
-        },
-      });
-      if (result.length === 0) {
-        res.send(head.error('账户或密码错误'));
-      } else {
-        const token = jwt.sign(
-          {
-            id: result[0].id,
-            user_uuid: result[0].user_uuid,
-            user_game_id: result[0].user_game_id,
-            role: result[0],
-          },
-          PRIVATE_KEY,
-          { expiresIn: EXPIRES },
-        );
-        res.send(
-          head.success('登入成功', {
-            token,
-            userBean: result[0],
-          }),
-        );
-      }
+        PRIVATE_KEY,
+      );
+      next(
+        new Success({
+          token,
+          userBean: result[0],
+        }),
+      );
     }
-  } catch (err) {
-    res.send(head.error());
-    next(err);
   }
 };
 
@@ -113,32 +111,28 @@ export const register = async (req: Req, res: Res, next: Next) => {
   }
 };
 
-async function getUserInfo(req: Req, res: Res, next: Next) {
-  const { user_uuid } = req.user;
-  try {
-    const result = await prisma.user.findMany({
-      where: {
-        user_uuid,
-      },
-      select: {
-        user_game_id: true,
-        is_whitelist: true,
-        user_score: true,
-        user_email: true,
-        user_uuid: true,
-        user_QQ: true,
-      },
-    });
-    res.send(
-      head.success('', {
-        userBean: result[0],
-      }),
-    );
-  } catch (err) {
-    res.send(head.error());
-    next(err);
-  }
-}
+export const getUserInfo = async (req: Req, res: Res, next: Next) => {
+  const { user_uuid } = req.auth;
+  console.log(user_uuid);
+  const result = await prisma.user.findMany({
+    where: {
+      user_uuid,
+    },
+    select: {
+      user_game_id: true,
+      is_whitelist: true,
+      user_score: true,
+      user_email: true,
+      user_uuid: true,
+      user_QQ: true,
+    },
+  });
+  next(
+    new Success({
+      userBean: result[0],
+    }),
+  );
+};
 
 export const sendCode = async (req: Req, res: Res, next: Next) => {
   const { user_email } = req.body;
@@ -219,7 +213,7 @@ async function getAllUsers(req: Req, res: Res, next: Next) {
 }
 
 async function updateUserImg(req: Req, res: Res, next: Next) {
-  const { user_uuid, id } = req.user;
+  const { user_uuid, id } = req.auth;
   if (req.file != null && req.file.length !== 0) {
     const file = req.file;
     try {
@@ -244,7 +238,7 @@ async function updateUserImg(req: Req, res: Res, next: Next) {
 }
 
 async function updateUserInfo(req: Req, res: Res, next: Next) {
-  const { user_uuid, id } = req.user;
+  const { user_uuid, id } = req.auth;
   const { user_game_id, user_email, user_QQ } = req.body;
   try {
     await prisma.user.update({
@@ -263,7 +257,7 @@ async function updateUserInfo(req: Req, res: Res, next: Next) {
 }
 
 async function changePassword(req: Req, res: Res, next: Next) {
-  const { id, user_uuid } = req.user;
+  const { id, user_uuid } = req.auth;
   let { user_password, user_new_password } = req.body;
   user_password = md5(user_password + PWD_SALT);
   try {

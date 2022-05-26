@@ -93,8 +93,8 @@ export class AuthFailed extends HttpException {
   }
 }
 
-// Forbbiden
-export class Forbbiden extends HttpException {
+// Forbidden
+export class Forbidden extends HttpException {
   constructor(msg: string, errorCode?: number) {
     super();
     this.code = 403;

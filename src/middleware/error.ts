@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction, request } from 'express';
+import { AuthFailed, NotFount } from '../utils/HttpException';
 
 export const defaultErrorHandler = (
   err: any,
@@ -6,22 +7,18 @@ export const defaultErrorHandler = (
   res: Response,
   next: NextFunction,
 ) => {
-  if (err.name === 'UnauthorizedError') {
-    // 这个需要根据⾃⼰的业务逻辑来处理
-    res.send({
-      head: {
-        code: 0,
-        msg: 'Token校验失败',
-      },
-    });
-    //    前端启用log out
-  } else {
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-    // render the error page
-    res.status(err.status || 500);
-    res.render('error');
+  switch (err.name) {
+    case 'UnauthorizedError': {
+      const authFailed = new AuthFailed('token验证失败');
+      res.status(authFailed.code).send(authFailed);
+      break;
+    }
+    case 'NotFoundError': {
+      const authFailed = new NotFount('资源不存在', 404);
+      res.status(authFailed.code).send(authFailed);
+      break;
+    }
+    default:
+      res.status(err.code || 500).send(err);
   }
 };

@@ -44,7 +44,6 @@ module.exports = {
     'lines-around-comment': ['error', { beforeBlockComment: true }],
     'newline-before-return': 'error',
     'no-multi-assign': 'error',
-    'max-params': [1, 3],
     'new-cap': [
       'error',
       {

@@ -9,9 +9,9 @@ const correctPaper = require('../utils/correctPaper');
 const prisma = new PrismaClient();
 
 async function submitPaper(req: Req, res: Res, next: Next) {
-  let { paper_content } = req.body;
-  const { user_uuid, id, user_game_id } = req.user;
-  let { score, percentScore } = correctPaper(paper_content);
+  const { paper_content } = req.body;
+  const { user_uuid, id, user_game_id } = req.auth;
+  const { score, percentScore } = correctPaper(paper_content);
   try {
     await prisma.paper.create({
       data: {

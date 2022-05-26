@@ -10,7 +10,7 @@ module.exports = function (paper_content: Array<paperQuestion>) {
   let percentScore = 0,
     sum = 0;
   for (let i = 0; i < paper_content.length; i++) {
-    let question = paper_content[i];
+    const question = paper_content[i];
     if (question.type === 'select') {
       sum += question.score;
       if (question.content === question.solution) {
@@ -19,6 +19,7 @@ module.exports = function (paper_content: Array<paperQuestion>) {
     }
   }
   percentScore = Number((score / (sum ? sum : 1)) * 100);
+
   return {
     score,
     percentScore,
