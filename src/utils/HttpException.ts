@@ -122,3 +122,5 @@ export class dataBaseFailed extends HttpException {
     this.errorCode = errorCode || 100005;
   }
 }
+
+// 等待

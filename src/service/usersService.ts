@@ -157,60 +157,50 @@ export const sendCode = async (req: Req, res: Res, next: Next) => {
     }, 300000);
   }
 
-  try {
-    const result = await prisma.code.findMany({
+  const result = await prisma.code.findMany({
+    where: { user_email },
+  });
+  if (
+    result.length !== 0 &&
+    Date.now() - Date.parse(result[0].code_time.toString()) <= 120000
+  ) {
+    res.send(head.error('请两分钟后重试'));
+  } else if (result.length !== 0) {
+    await prisma.code.delete({
       where: { user_email },
     });
-    if (
-      result.length !== 0 &&
-      Date.now() - Date.parse(result[0].code_time.toString()) <= 120000
-    ) {
-      res.send(head.error('请两分钟后重试'));
-    } else if (result.length !== 0) {
-      await prisma.code.delete({
-        where: { user_email },
-      });
-      await prisma.code.create({
-        data: {
-          user_email,
-          code: code,
-          code_time: new Date(),
-        },
-      });
-      send();
-    } else {
-      await prisma.code.create({
-        data: {
-          user_email,
-          code: code,
-          code_time: new Date(),
-        },
-      });
-      send();
-    }
-  } catch (err) {
-    res.send(head.error());
-    next(err);
+    await prisma.code.create({
+      data: {
+        user_email,
+        code: code,
+        code_time: new Date(),
+      },
+    });
+    send();
+  } else {
+    await prisma.code.create({
+      data: {
+        user_email,
+        code: code,
+        code_time: new Date(),
+      },
+    });
+    send();
   }
 };
 
-async function getAllUsers(req: Req, res: Res, next: Next) {
-  try {
-    const result = await prisma.user.findMany({
-      select: {
-        user_game_id: true,
-        user_uuid: true,
-        user_image_url: true,
-        is_whitelist: true,
-        user_is_ban: true,
-      },
-    });
-    res.send(head.success('', result));
-  } catch (err) {
-    res.send(head.error());
-    next(err);
-  }
-}
+export const getAllUsers = async (req: Req, res: Res, next: Next) => {
+  const result = await prisma.user.findMany({
+    select: {
+      user_game_id: true,
+      user_uuid: true,
+      user_image_url: true,
+      is_whitelist: true,
+      user_is_ban: true,
+    },
+  });
+  next(new Success({ users: result }));
+};
 
 async function updateUserImg(req: Req, res: Res, next: Next) {
   const { user_uuid, id } = req.auth;

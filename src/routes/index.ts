@@ -5,7 +5,7 @@ const createError = require('http-errors');
 // const usersRouter = require('../routes/users');
 const websiteRouter = require('./websiteRoute');
 const userRouter = require('./userRoute');
-const paperRouter = require('./paper');
+const paperRouter = require('./paperRoute');
 
 const router = express.Router();
 
