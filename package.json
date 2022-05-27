@@ -4,8 +4,8 @@
   "description": "",
   "main": "sls.js",
   "scripts": {
-    "pro": "set NODE_ENV=production&& nodemon src/app.ts",
-    "dev": "set NODE_ENV=development&& nodemon src/app.ts",
+    "pro": "set NODE_ENV=production && prisma generate && nodemon src/app.ts",
+    "dev": "set NODE_ENV=development && prisma generate && nodemon src/app.ts",
     "build": "tsc",
     "start": "yarn install --production && prisma generate && node dist/app.js"
   },

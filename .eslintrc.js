@@ -21,6 +21,7 @@ module.exports = {
     curly: ['error', 'all'],
     '@typescript-eslint/no-var-requires': 0,
     camelcase: 0,
+    endOfLine: 0,
     'newline-after-var': 0,
     'default-case': 'error',
     'no-else-return': 'error',

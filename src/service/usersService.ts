@@ -148,7 +148,7 @@ export const sendCode = async (req: Req, res: Res, next: Next) => {
         <p style='text-align: right;'>—— 辉光世界|LightWorld</p>`,
     });
     res.send(head.success('请查收邮箱'));
-    setTimeout(async function () {
+    setTimeout(async function() {
       await prisma.code.delete({
         where: {
           user_email,
