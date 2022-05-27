@@ -15,7 +15,6 @@ module.exports = {
   },
   plugins: ['@typescript-eslint'],
   rules: {
-    'linebreak-style': ['error', 'unix'],
     quotes: ['error', 'single'],
     semi: ['error', 'always'],
     curly: ['error', 'all'],
@@ -45,6 +44,7 @@ module.exports = {
     'lines-around-comment': ['error', { beforeBlockComment: true }],
     'newline-before-return': 'error',
     'no-multi-assign': 'error',
+    'space-before-function-paren': 0,
     'new-cap': [
       'error',
       {

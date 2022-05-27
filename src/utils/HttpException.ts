@@ -123,4 +123,12 @@ export class dataBaseFailed extends HttpException {
   }
 }
 
-// 等待
+//  服务器异常
+export class ServerError extends HttpException {
+  constructor(msg?: string, errorCode?: number) {
+    super();
+    this.code = 500;
+    this.message = msg || '服务器异常, 请联系管理员';
+    this.errorCode = errorCode || 10000;
+  }
+}

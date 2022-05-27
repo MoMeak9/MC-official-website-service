@@ -11,14 +11,8 @@ import { expressjwt } from 'express-jwt';
 import { PRIVATE_KEY, whitelist } from './config';
 
 scheduleJobs();
-let port = 3001;
+const port = 3001;
 
-if (process.env.NODE_ENV === 'development') {
-  console.log('当前环境是开发环境');
-} else {
-  port = 9000;
-  console.log('当前环境是生产环境');
-}
 const app: Express = express();
 
 app.use(bodyParser.json({ limit: '50mb' }));

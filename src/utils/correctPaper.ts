@@ -5,7 +5,7 @@ type paperQuestion = {
   solution?: string;
 };
 
-module.exports = function (paper_content: Array<paperQuestion>) {
+module.exports = function(paper_content: Array<paperQuestion>) {
   let score = 0;
   let percentScore = 0,
     sum = 0;
