@@ -3,11 +3,16 @@ import express = require('express');
 const multer = require('multer');
 const upload = multer();
 const router = express.Router();
-const services = require('../service/websiteService');
+import {
+  getArticle,
+  getServerInfo,
+  uploadFile,
+  updatePVNum,
+} from '../service/websiteService';
 
-router.get('/getArticle', services.getArticle);
-router.get('/getServerInfo', services.getServerInfo);
-router.post('/uploadFile', upload.single('file'), services.uploadFile);
-router.get('/updateVisitorNum', services.updateVisitorNum);
+router.get('/getArticle', getArticle);
+router.get('/getServerInfo', getServerInfo);
+router.post('/uploadFile', upload.single('file'), uploadFile);
+router.get('/updateVisitorNum', updatePVNum);
 
 module.exports = router;

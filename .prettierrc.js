@@ -15,4 +15,8 @@ module.exports = {
   proseWrap: 'preserve', //不知道怎么翻译
   endOfLine: 'lf', //结束行形式
   embeddedLanguageFormatting: 'auto', //对引用代码进行格式化
+  functionSentence: false, //函数定义时，函数名后面的句号
+  functionDeclaration: 'declare', //函数声明的风格
+  functionExpression: 'declare', //函数表达式的风格
+  functionParams: 'avoid', //函数参数的风格
 };

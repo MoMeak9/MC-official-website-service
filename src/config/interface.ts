@@ -5,6 +5,6 @@ export interface Req extends Request, JWTRequest {
   file: any;
 }
 
-export interface Res extends Response {}
+export type Res = Response;
 
-export interface Next extends NextFunction {}
+export type Next = NextFunction;

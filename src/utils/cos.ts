@@ -5,7 +5,7 @@ const cos = new COS({
   SecretKey: '',
 });
 
-module.exports = async function(file) {
+module.exports = async function (file) {
   const date = new Date();
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -20,7 +20,7 @@ module.exports = async function(file) {
         Key: dir + file.originalname /* 必须 */,
         StorageClass: '',
         Body: file.buffer, // 上传文件对象
-        onProgress: function(progressData) {
+        onProgress: function (progressData) {
           console.log(JSON.stringify(progressData));
         },
       },

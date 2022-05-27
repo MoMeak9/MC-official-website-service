@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { Next, Req, Res } from '../config/interface';
 import { queryServerInfo } from '../config/api';
+import { ServerError, Success } from '../utils/HttpException';
 
 const upload = require('../utils/cos');
 const prisma = new PrismaClient();
@@ -8,35 +9,38 @@ const head = require('../utils/head');
 
 export const getArticle = async (req: Req, res: Res, next: Next) => {
   const articles = await prisma.article.findMany({});
-  res.send(
-    head.success('', {
-      articles,
-    }),
-  );
+  next(new Success(articles));
 };
 
-async function getServerInfo(req: Req, res: Res) {
-  queryServerInfo().then((data) => {
-    res.send(head.success('', data));
-  });
-}
-
-async function uploadFile(req: Req, res: Res, next: Next) {
-  const file = req.file;
-  console.log(file);
-  try {
-    upload(file).then((data) => {
-      res.send({
-        address: `https://${data.Location}`,
-      });
+// 获取游戏服务器信息
+export const getServerInfo = (req: Req, res: Res, next: Next) => {
+  queryServerInfo()
+    .then((data) => {
+      next(new Success(data));
+    })
+    .catch(() => {
+      next(new ServerError());
     });
-  } catch (err) {
-    res.status(500).send(head.error());
-    next(err);
-  }
-}
+};
 
-async function updateVisitorNum(req: Req, res: Res, next: Next) {
+// 上传文件
+export const uploadFile = (req: Req, res: Res, next: Next) => {
+  const file = req.file;
+  upload(file)
+    .then((data) => {
+      next(
+        new Success({
+          address: `https://${data.Location}`,
+        }),
+      );
+    })
+    .catch(() => {
+      next(new ServerError());
+    });
+};
+
+// 站点UV统计
+export const updateUVNum = async (req: Req, res: Res, next: Next) => {
   try {
     await prisma.counter.updateMany({
       where: { count_item: { contains: 'visitors' } },
@@ -51,11 +55,8 @@ async function updateVisitorNum(req: Req, res: Res, next: Next) {
     res.send(head.error());
     next(err);
   }
-}
+};
 
-module.exports = {
-  getArticle,
-  getServerInfo,
-  uploadFile,
-  updateVisitorNum,
+// 站点PV统计
+export const updatePVNum = async (req: Req, res: Res, next: Next) => {
 };
