@@ -10,11 +10,22 @@ import { PWD_SALT, PRIVATE_KEY, EXPIRES } from '../config';
 import {
   AuthFailed,
   ParameterException,
+  ServerError,
   Success,
 } from '../utils/HttpException';
 
 const head = require('../utils/head');
 const prisma = new PrismaClient();
+
+const userSelect = {
+  id: true,
+  user_game_id: true,
+  is_whitelist: true,
+  user_score: true,
+  user_email: true,
+  user_uuid: true,
+  user_QQ: true,
+};
 
 export const login = async (req: Req, res: Res, next: Next) => {
   let { user_password } = req.body;
@@ -28,15 +39,7 @@ export const login = async (req: Req, res: Res, next: Next) => {
         user_email,
         user_password,
       },
-      select: {
-        id: true,
-        user_game_id: true,
-        is_whitelist: true,
-        user_score: true,
-        user_email: true,
-        user_uuid: true,
-        user_QQ: true,
-      },
+      select: userSelect,
     });
     if (result.length === 0) {
       next(new AuthFailed('用户名或密码错误'));
@@ -49,6 +52,9 @@ export const login = async (req: Req, res: Res, next: Next) => {
           role: result[0],
         },
         PRIVATE_KEY,
+        {
+          expiresIn: EXPIRES,
+        },
       );
       next(
         new Success({
@@ -148,7 +154,7 @@ export const sendCode = async (req: Req, res: Res, next: Next) => {
         <p style='text-align: right;'>—— 辉光世界|LightWorld</p>`,
     });
     res.send(head.success('请查收邮箱'));
-    setTimeout(async function () {
+    setTimeout(async function() {
       await prisma.code.delete({
         where: {
           user_email,
@@ -202,12 +208,12 @@ export const getAllUsers = async (req: Req, res: Res, next: Next) => {
   next(new Success({ users: result }));
 };
 
-async function updateUserImg(req: Req, res: Res, next: Next) {
+export const updateUserImg = async (req: Req, res: Res, next: Next) => {
   const { user_uuid, id } = req.auth;
   if (req.file != null && req.file.length !== 0) {
     const file = req.file;
-    try {
-      upload(file).then((data) => {
+    await upload(file)
+      .then((data) => {
         const address = `https://${data.Location}`;
         prisma.user
           .update({
@@ -215,70 +221,56 @@ async function updateUserImg(req: Req, res: Res, next: Next) {
             data: { user_image_url: address },
           })
           .then(() => {
-            res.send(head.success('更新成功'));
+            next(new Success({ user_image_url: address }, '修改成功'));
           });
+      })
+      .catch(() => {
+        next(new ServerError());
       });
-    } catch (err) {
-      res.send(head.error('参数缺失'));
-      next(err);
-    }
   } else {
-    res.send(head.error());
+    next(new ParameterException('请上传图片'));
   }
-}
+};
 
-async function updateUserInfo(req: Req, res: Res, next: Next) {
+export const updateUserInfo = async (req: Req, res: Res, next: Next) => {
   const { user_uuid, id } = req.auth;
-  const { user_game_id, user_email, user_QQ } = req.body;
-  try {
-    await prisma.user.update({
-      where: { id_user_uuid: { id, user_uuid } },
-      data: {
-        user_game_id,
-        user_email,
-        user_QQ,
+  const { user_game_id, user_QQ } = req.body;
+  const userInfo = await prisma.user.update({
+    where: { id_user_uuid: { id, user_uuid } },
+    data: {
+      user_game_id,
+      user_QQ,
+    },
+    select: userSelect,
+  });
+  next(
+    new Success(
+      {
+        userBean: userInfo,
       },
-    });
-    res.send(head.success('更新成功'));
-  } catch (err) {
-    res.send(head.error());
-    next(err);
-  }
-}
+      '更新成功',
+    ),
+  );
+};
 
-async function changePassword(req: Req, res: Res, next: Next) {
+export const changePassword = async (req: Req, res: Res, next: Next) => {
   const { id, user_uuid } = req.auth;
   let { user_password, user_new_password } = req.body;
   user_password = md5(user_password + PWD_SALT);
-  try {
-    const result = await prisma.user.findUnique({
-      where: {
-        id_user_uuid: { id, user_uuid },
-      },
-      select: { user_password: true },
+  const result = await prisma.user.findUnique({
+    where: {
+      id_user_uuid: { id, user_uuid },
+    },
+    select: { user_password: true },
+  });
+  if (result.user_password != user_password) {
+    res.send(head.error('密码错误'));
+  } else {
+    user_new_password = md5(user_new_password + PWD_SALT);
+    await prisma.user.update({
+      where: { id_user_uuid: { id, user_uuid } },
+      data: { user_password: user_new_password },
     });
-    if (result.user_password != user_password) {
-      res.send(head.error('密码错误'));
-    } else {
-      user_new_password = md5(user_new_password + PWD_SALT);
-      await prisma.user.update({
-        where: { id_user_uuid: { id, user_uuid } },
-        data: { user_password: user_new_password },
-      });
-    }
-  } catch (err) {
-    res.send(head.error());
-    next(err);
   }
-}
-
-export default {
-  login,
-  register,
-  getUserInfo,
-  sendCode,
-  getAllUsers,
-  updateUserInfo,
-  updateUserImg,
-  changePassword,
+  next(new Success({}, '更新成功'));
 };

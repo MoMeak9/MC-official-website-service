@@ -1,4 +1,4 @@
-import request from '../utils/require';
+import request from '../utils/request';
 
 const { KEY } = require('../config');
 type Command = {

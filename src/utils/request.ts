@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const service = axios.create({
   // eslint-disable-next-line no-undef
-  baseURL: '',
+  baseURL: process.env.BASE_MCSM_URL,
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000, // request timeout
 });

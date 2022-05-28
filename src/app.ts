@@ -7,18 +7,12 @@ import { Express } from 'express';
 import express = require('express');
 import { defaultErrorHandler } from './middleware/error';
 import { scheduleJobs } from './utils/schedule'; // 定时任务
-import { expressjwt } from 'express-jwt';
 import { PRIVATE_KEY, whitelist } from './config';
 
+const jwt = require('express-jwt');
 scheduleJobs();
-let port = 3001;
+const port = 3001;
 
-if (process.env.NODE_ENV === 'development') {
-  console.log('当前环境是开发环境');
-} else {
-  port = 9000;
-  console.log('当前环境是生产环境');
-}
 const app: Express = express();
 
 app.use(bodyParser.json({ limit: '50mb' }));
@@ -35,12 +29,14 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(
-  expressjwt({
-    secret: PRIVATE_KEY,
-    algorithms: ['HS256'],
-  }).unless({
-    path: whitelist, // ⽩名单,除了这⾥写的地址，其他的URL都需要验证
-  }),
+  jwt
+    .expressjwt({
+      secret: PRIVATE_KEY,
+      algorithms: ['HS256'],
+    })
+    .unless({
+      path: whitelist, // ⽩名单,除了这⾥写的地址，其他的URL都需要验证
+    }),
 );
 
 app.use('/', routers);
