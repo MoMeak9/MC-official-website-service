@@ -76,3 +76,22 @@ model question {
   question_answer String? @db.VarChar(255)
   question_score  Int?
 }
+
+model gallery {
+  id          Int       @id
+  img_url     String?   @db.VarChar(255)
+  user_uuid   Int
+  create_time DateTime? @db.DateTime(0)
+  title       String?   @db.VarChar(255)
+  intro       String?   @db.VarChar(255)
+  status      Int?      @db.TinyInt
+  update_time DateTime? @db.DateTime(0)
+}
+
+model leave_message {
+  id          Int       @id @default(autoincrement())
+  create_time DateTime? @db.DateTime(0)
+  message     String?   @db.Text
+  user_uuid   String    @db.VarChar(64)
+  type        Int?
+}

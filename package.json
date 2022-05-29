@@ -6,8 +6,8 @@
   "scripts": {
     "pro": "set NODE_ENV=production && prisma generate && nodemon src/app.ts",
     "dev": "set NODE_ENV=development && prisma generate && nodemon src/app.ts",
-    "build": "tsc",
-    "start": "yarn install --production && prisma generate && node dist/app.js"
+    "build": "tsc && prisma generate",
+    "deploy": "yarn install --production && prisma generate && serverless deploy"
   },
   "author": "yugasun",
   "license": "MIT",

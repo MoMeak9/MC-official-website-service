@@ -11,7 +11,7 @@ import { PRIVATE_KEY, whitelist } from './config';
 
 const jwt = require('express-jwt');
 scheduleJobs();
-const port = 3001;
+const port = 9000;
 
 const app: Express = express();
 

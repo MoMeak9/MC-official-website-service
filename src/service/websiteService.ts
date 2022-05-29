@@ -35,9 +35,38 @@ export const uploadFile = (req: Req, res: Res, next: Next) => {
       );
     })
     .catch(() => {
-      next(new ServerError());
+      next(new ServerError('上传失败'));
     });
 };
+
+// 画廊上传
+export const uploadGallery = (req: Req, res: Res, next: Next) => {
+  const file = req.file;
+  upload(file)
+    .then((data) => {
+      next(
+        new Success({
+          address: `https://${data.Location}`,
+        }),
+      );
+    })
+    .catch(() => {
+      next(new ServerError('上传失败'));
+    });
+};
+
+// 留言
+// export const leaveMessage = async (req: Req, res: Res, next: Next) => {
+//   const { name, email, content } = req.body;
+//   const message = await prisma.message.create({
+//     data: {
+//       name,
+//       email,
+//       content,
+//     },
+//   });
+//   next(new Success(message));
+// };
 
 // 站点UV统计
 export const updateUVNum = async (req: Req, res: Res, next: Next) => {
