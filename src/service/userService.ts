@@ -3,6 +3,7 @@ import { User } from '../entity/User';
 import { md5 } from '../utils';
 import { EXPIRES, PRIVATE_KEY, PWD_SALT } from '../config';
 import jwt = require('jsonwebtoken');
+import sendMail from '../utils/sendMail';
 
 const userSelect = {
   id: true,
@@ -63,6 +64,51 @@ export class UserService {
       },
       select: userSelect,
     });
+  }
+
+  async getUserByEmail(user_email: string): Promise<Array<User>> {
+    return await this.userRepository.find({
+      where: {
+        user_email,
+      },
+      select: userSelect,
+    });
+  }
+
+  async createUser(user: User): Promise<User> {
+    return await this.userRepository.save(user);
+  }
+
+  async checkCode(user_email: string, code: string): Promise<Array<User>> {
+    return await this.userRepository.find({
+      where: {
+        user_email,
+      },
+      select: {
+      },
+    });
+  }
+
+  async sendEmail(user_email: string, code: string) {
+    await sendMail({
+      email: user_email,
+      content: `
+        <p style='text-indent: 2em;'>亲爱的辉光世界注册玩家：</p>
+        <p style='text-indent: 2em;'>您的注册验证码<strong>${code}</strong>，验证码5分钟内有效，请尽快使用！
+        <p style='text-indent: 2em;'>祝您工作顺利，心想事成</p>
+        <p style='text-align: right;'>—— 辉光世界|LightWorld</p>`,
+    });
+    // setTimeout(async function () {
+    //   await prisma.code.delete({
+    //     where: {
+    //       user_email,
+    //     },
+    //   });
+    // }, 300000);
+  }
+
+  async updateUser(user: User): Promise<User> {
+    return await this.userRepository.save(user);
   }
 
   async getAllUser(): Promise<Array<User>> {

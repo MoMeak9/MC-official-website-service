@@ -41,6 +41,7 @@ AppDataSource.initialize()
         }),
     );
     // register express route from defined application route
+
     Routes.forEach((route) => {
       (app as any)[route.method](
         route.route,

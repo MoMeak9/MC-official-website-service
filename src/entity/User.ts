@@ -10,10 +10,10 @@ import {
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
 
   @Column({ length: 64, nullable: false })
-  user_uuid: string;
+  user_uuid?: string;
 
   @Column({ length: 64, nullable: false })
   user_game_id: string;
@@ -25,13 +25,13 @@ export class User {
   user_email: string;
 
   @Column({ default: 0 })
-  user_score: number;
+  user_score?: number;
 
   @Column({ default: 0 })
-  is_whitelist: number;
+  is_whitelist?: number;
 
   @Column({ default: '', nullable: true })
-  user_image_url: string;
+  user_image_url?: string;
 
   @Column({ length: 128, default: '' })
   user_QQ: string;
@@ -40,14 +40,14 @@ export class User {
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP(6)',
   })
-  create_time: Timestamp;
+  create_time?: Timestamp;
 
   @UpdateDateColumn({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP(6)',
   })
-  update_time: Timestamp;
+  update_time?: Timestamp;
 
   @Column({ default: 0 })
-  user_is_ban: number;
+  user_is_ban?: number;
 }
