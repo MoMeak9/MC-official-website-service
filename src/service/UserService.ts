@@ -50,6 +50,19 @@ export class UserService {
     );
   }
 
+  async getCodeByEmail(user_email: string) {
+    return await this.codeRepository.findOne({
+      where: {
+        user_email,
+      },
+      select: {
+        id: true,
+        user_email: true,
+        code: true,
+      },
+    });
+  }
+
   async getUserByUUID(user_uuid: string): Promise<Array<User>> {
     return await this.userRepository.find({
       where: {
@@ -101,8 +114,8 @@ export class UserService {
     return result.length === 0;
   }
 
-  sendEmail(user_email: string, code: string) {
-    sendMail({
+  async sendEmail(user_email: string, code: string) {
+    await sendMail({
       email: user_email,
       content: `
         <p style='text-indent: 2em;'>亲爱的辉光世界注册玩家：</p>
@@ -111,11 +124,13 @@ export class UserService {
         <p style='text-align: right;'>—— 辉光世界|LightWorld</p>`,
     });
     setTimeout(() => {
-      this.codeRepository.delete({
-        user_email,
-      }).catch(err => {
-        console.log(err);
-      });
+      this.codeRepository
+        .delete({
+          user_email,
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }, 300000);
   }
 
@@ -123,7 +138,14 @@ export class UserService {
     return await this.userRepository.save(user);
   }
 
-  async getAllUser(): Promise<Array<User>> {
-    return await this.userRepository.find();
+  async getAllUser(current, pageSize): Promise<Array<User>> {
+    return await this.userRepository.find({
+      order: {
+        id: 'DESC',
+      },
+      skip: (current - 1) * pageSize,
+      take: pageSize,
+      select: userSelect,
+    });
   }
 }

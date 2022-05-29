@@ -1,6 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import { UserService } from '../service/userService';
 import { ParameterException, Success } from '../utils/HttpException';
+import { v4 } from 'uuid';
+import { md5 } from '../utils';
+import { PWD_SALT } from '../config';
 
 export class UserController {
   private UserService = new UserService();
@@ -31,14 +34,17 @@ export class UserController {
     if (!user_email || !user_game_id || !user_password || !user_QQ || !code) {
       next(new ParameterException('参数缺失'));
     }
+    (await this.UserService.checkCode(user_email, code)) ||
+      next(new ParameterException('验证码错误'));
     const result = await this.UserService.getUserByEmail(user_email);
     if (result.length !== 0) {
       next(new ParameterException('用户已存在'));
     } else {
       const user = await this.UserService.createUser({
+        user_uuid: v4(),
         user_email,
         user_game_id,
-        user_password,
+        user_password: md5(user_password + PWD_SALT),
         user_QQ,
       });
       const token = this.UserService.signToken(user);
@@ -59,5 +65,11 @@ export class UserController {
       next(new ParameterException('验证码已发送，请5分钟后再试'));
     const code = Math.floor(Math.random() * 9000 + 1000).toString();
     await this.UserService.sendEmail(user_email, code);
+    next(new Success({}, '请查收邮件'));
+  }
+
+  async list(req: Request, res: Response, next: NextFunction): Promise<void> {
+    const { current, pageSize } = req.body;
+    next(new Success(await this.UserService.getAllUser(current, pageSize)));
   }
 }
