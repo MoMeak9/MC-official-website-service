@@ -6,12 +6,11 @@
    "scripts": {
       "pro": "set NODE_ENV=production && nodemon src/app.ts",
       "dev": "set NODE_ENV=development && nodemon src/app.ts",
-      "build": "tsc",
+      "build": "tsc && node build/app.js",
       "deploy": "tsc && yarn install --production && serverless deploy",
       "start": "ts-node src/index.ts",
       "typeorm": "typeorm-ts-node-commonjs"
    },
-   "author": "yugasun",
    "license": "MIT",
    "dependencies": {
       "axios": "^0.27.2",
@@ -33,6 +32,7 @@
       "uuid": "^8.3.2"
    },
    "devDependencies": {
+      "@types/cors": "^2.8.12",
       "@types/express": "^4.17.13",
       "@types/multer": "^1.4.7",
       "@types/node": "^16.11.10",
