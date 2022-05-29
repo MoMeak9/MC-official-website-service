@@ -5,7 +5,7 @@ import { ParameterException, Success } from '../utils/HttpException';
 export class UserController {
   private UserService = new UserService();
 
-  async login(req: Request, res: Response, next: NextFunction) {
+  async login(req: Request, res: Response, next: NextFunction): Promise<void> {
     const { user_password, user_email } = req.body;
     if (user_email == null || user_password == null) {
       next(new ParameterException('参数缺失'));
@@ -22,7 +22,11 @@ export class UserController {
     }
   }
 
-  async register(req: Request, res: Response, next: NextFunction) {
+  async register(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     const { user_email, user_game_id, user_password, user_QQ, code } = req.body;
     if (!user_email || !user_game_id || !user_password || !user_QQ || !code) {
       next(new ParameterException('参数缺失'));
@@ -42,17 +46,18 @@ export class UserController {
     }
   }
 
-  async sendCode(req: Request, res: Response, next: NextFunction) {
+  async sendCode(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     const { user_email } = req.body;
     if (!user_email) {
       next(new ParameterException('参数缺失'));
     }
-    const result = await this.UserService.getUserByEmail(user_email);
-    const code = Math.floor(Math.random() * 9000 + 1000);
-    if (result.length !== 0) {
-      next(new ParameterException('用户已存在'));
-    } else {
-      next(new Success({ code: '123456' }));
-    }
+    (await this.UserService.checkHasCode(user_email)) ||
+      next(new ParameterException('验证码已发送，请5分钟后再试'));
+    const code = Math.floor(Math.random() * 9000 + 1000).toString();
+    await this.UserService.sendEmail(user_email, code);
   }
 }

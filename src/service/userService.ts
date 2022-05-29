@@ -1,5 +1,6 @@
 import { AppDataSource } from '../data-source';
 import { User } from '../entity/User';
+import { Code } from '../entity/Code';
 import { md5 } from '../utils';
 import { EXPIRES, PRIVATE_KEY, PWD_SALT } from '../config';
 import jwt = require('jsonwebtoken');
@@ -17,6 +18,7 @@ const userSelect = {
 
 export class UserService {
   private userRepository = AppDataSource.getRepository(User);
+  private codeRepository = AppDataSource.getRepository(Code);
 
   async checkPassword(
     user_password: string,
@@ -79,18 +81,28 @@ export class UserService {
     return await this.userRepository.save(user);
   }
 
-  async checkCode(user_email: string, code: string): Promise<Array<User>> {
-    return await this.userRepository.find({
+  async checkCode(user_email: string, code: string): Promise<boolean> {
+    const result = await this.codeRepository.find({
       where: {
         user_email,
       },
-      select: {
-      },
     });
+
+    return !(result.length === 0 || result[0].code !== code);
   }
 
-  async sendEmail(user_email: string, code: string) {
-    await sendMail({
+  async checkHasCode(user_email: string): Promise<boolean> {
+    const result = await this.codeRepository.find({
+      where: {
+        user_email,
+      },
+    });
+
+    return result.length === 0;
+  }
+
+  sendEmail(user_email: string, code: string) {
+    sendMail({
       email: user_email,
       content: `
         <p style='text-indent: 2em;'>亲爱的辉光世界注册玩家：</p>
@@ -98,13 +110,13 @@ export class UserService {
         <p style='text-indent: 2em;'>祝您工作顺利，心想事成</p>
         <p style='text-align: right;'>—— 辉光世界|LightWorld</p>`,
     });
-    // setTimeout(async function () {
-    //   await prisma.code.delete({
-    //     where: {
-    //       user_email,
-    //     },
-    //   });
-    // }, 300000);
+    setTimeout(() => {
+      this.codeRepository.delete({
+        user_email,
+      }).catch(err => {
+        console.log(err);
+      });
+    }, 300000);
   }
 
   async updateUser(user: User): Promise<User> {
