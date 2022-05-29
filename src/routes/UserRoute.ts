@@ -1,51 +1,52 @@
 import { UserController } from '../controller/UserController';
+import { EMethod, IRoute } from '../types';
 
 const basePath = '/api/user';
-export const UserRoutes: Array<any> = [
+export const UserRoutes: Array<IRoute> = [
   {
-    method: 'post',
+    method: EMethod.POST,
     route: `${basePath}/login`,
     controller: UserController,
     action: 'login',
   },
   {
-    method: 'post',
+    method: EMethod.POST,
     route: `${basePath}/register`,
     controller: UserController,
     action: 'register',
   },
   {
-    method: 'get',
+    method: EMethod.GET,
     route: `${basePath}/getUserInfo`,
     controller: UserController,
     action: 'getUserInfo',
   },
   {
-    method: 'post',
+    method: EMethod.POST,
     route: `${basePath}/sendCode`,
     controller: UserController,
     action: 'sendCode',
   },
   {
-    method: 'get',
+    method: EMethod.GET,
     route: `${basePath}/getAllUsers`,
     controller: UserController,
     action: 'getAllUsers',
   },
   {
-    method: 'post',
+    method: EMethod.POST,
     route: `${basePath}/updateUserInfo`,
     controller: UserController,
     action: 'updateUserInfo',
   },
   {
-    method: 'post',
+    method: EMethod.POST,
     route: `${basePath}/updateUserImg`,
     controller: UserController,
     action: 'updateUserImg',
   },
   {
-    method: 'post',
+    method: EMethod.POST,
     route: `${basePath}/changePassword`,
     controller: UserController,
     action: 'changePassword',

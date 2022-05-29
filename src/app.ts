@@ -1,14 +1,14 @@
 import * as express from 'express';
-import * as bodyParser from 'body-parser';
 import { Request, Response } from 'express';
+import * as bodyParser from 'body-parser';
 import { AppDataSource } from './data-source';
-import { Routes } from './route';
+import { Routes } from './routes';
 import { defaultErrorHandler } from './middleware/error';
 import { scheduleJobs } from './utils/schedule'; // 定时任务
 import { PRIVATE_KEY, whitelist } from './config';
+import * as cors from 'cors';
 import path = require('path');
 import cookieParser = require('cookie-parser');
-import cors = require('cors');
 import jwt = require('express-jwt');
 
 AppDataSource.initialize()

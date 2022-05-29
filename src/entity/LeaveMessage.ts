@@ -8,34 +8,32 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class Article {
+export class LeaveMessage {
   @PrimaryGeneratedColumn()
-  id?: number;
+  id: number;
 
-  @Column({ length: 100 })
-  article_title: string;
+  @Column()
+  content: string;
 
-  @Column({ length: 100 })
-  article_subtitle: string;
+  @Column()
+  userId: number;
 
-  @Column({ type: 'text', length: 100 })
-  article_content: string;
-
-  @Column({ length: 100 })
-  article_cover: string;
-
-  @Column({ length: 100 })
+  @Column()
   user_uuid: string;
+
+  @Column()
+  userAvatar: string;
 
   @CreateDateColumn({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP(6)',
   })
-  create_time: Timestamp;
+  createdAt: Timestamp;
 
   @UpdateDateColumn({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP(6)',
+    onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
-  update_time: Timestamp;
+  updatedAt: Timestamp;
 }
