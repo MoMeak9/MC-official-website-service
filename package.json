@@ -7,7 +7,7 @@
       "pro": "set NODE_ENV=production && nodemon src/app.ts",
       "dev": "set NODE_ENV=development && nodemon src/app.ts",
       "build": "tsc && node build/app.js",
-      "deploy": "tsc && yarn install --production && serverless deploy",
+      "deploy": "tsc && yarn install --production && serverless deploy && yarn install",
       "start": "ts-node src/index.ts",
       "typeorm": "typeorm-ts-node-commonjs"
    },
