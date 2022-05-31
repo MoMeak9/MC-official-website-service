@@ -1,4 +1,5 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
+import { Request } from 'express-jwt';
 import { UserService } from '../service/userService';
 import { ParameterException, Success } from '../utils/HttpException';
 import { v4 } from 'uuid';
@@ -18,8 +19,8 @@ export class UserController {
       user_email,
     );
     if (result.length !== 0) {
-      const token = this.UserService.signToken(result[0]);
-      next(new Success({ token, userBean: result[0] }));
+      const token = await this.UserService.signToken(result[0]);
+      next(new Success({ token: token, userBean: result[0] }));
     } else {
       next(new ParameterException('用户名或密码错误'));
     }
@@ -40,6 +41,7 @@ export class UserController {
     if (result.length !== 0) {
       next(new ParameterException('用户已存在'));
     } else {
+      await this.UserService.deleteCode(user_email);
       const user = await this.UserService.createUser({
         user_uuid: v4(),
         user_email,
@@ -48,7 +50,7 @@ export class UserController {
         user_QQ,
       });
       const token = this.UserService.signToken(user);
-      next(new Success({ token, userBean: user }));
+      next(new Success({ token, userBean: user }, '注册成功'));
     }
   }
 
@@ -61,15 +63,34 @@ export class UserController {
     if (!user_email) {
       next(new ParameterException('参数缺失'));
     }
-    (await this.UserService.checkHasCode(user_email)) ||
+    if (await this.UserService.checkHasCode(user_email)) {
+      const code = Math.floor(Math.random() * 9000 + 1000).toString();
+      await this.UserService.createCode(user_email, code);
+      await this.UserService.sendEmail(user_email, code);
+      next(new Success({}, '请查收邮件'));
+    } else {
       next(new ParameterException('验证码已发送，请5分钟后再试'));
-    const code = Math.floor(Math.random() * 9000 + 1000).toString();
-    await this.UserService.sendEmail(user_email, code);
-    next(new Success({}, '请查收邮件'));
+    }
   }
 
   async list(req: Request, res: Response, next: NextFunction): Promise<void> {
     const { current, pageSize } = req.body;
     next(new Success(await this.UserService.getAllUser(current, pageSize)));
+  }
+
+  async getUserInfo(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    const { user_uuid } = req.auth;
+    if (!user_uuid) {
+      next(new ParameterException('参数缺失'));
+    }
+    next(
+      new Success({
+        userBean: (await this.UserService.getUserByUUID(user_uuid))[0],
+      }),
+    );
   }
 }

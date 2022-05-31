@@ -11,3 +11,10 @@ export interface IRoute {
   controller: any;
   action: string;
 }
+
+export interface IPaperQuestion {
+  type?: string;
+  score?: number;
+  content?: string;
+  solution?: string;
+}

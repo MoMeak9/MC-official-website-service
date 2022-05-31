@@ -3,8 +3,8 @@ import { User } from '../entity/User';
 import { Code } from '../entity/Code';
 import { md5 } from '../utils';
 import { EXPIRES, PRIVATE_KEY, PWD_SALT } from '../config';
-import jwt = require('jsonwebtoken');
 import sendMail from '../utils/sendMail';
+import jwt = require('jsonwebtoken');
 
 const userSelect = {
   id: true,
@@ -35,19 +35,10 @@ export class UserService {
     });
   }
 
-  async signToken(user: User) {
-    return jwt.sign(
-      {
-        id: user.id,
-        user_uuid: user.user_uuid,
-        user_game_id: user.user_game_id,
-        role: user,
-      },
-      PRIVATE_KEY,
-      {
-        expiresIn: EXPIRES,
-      },
-    );
+  async signToken(user: User): Promise<string> {
+    return await jwt.sign({ ...user }, PRIVATE_KEY, {
+      expiresIn: EXPIRES,
+    });
   }
 
   async getCodeByEmail(user_email: string) {
@@ -102,6 +93,19 @@ export class UserService {
     });
 
     return !(result.length === 0 || result[0].code !== code);
+  }
+
+  async createCode(user_email: string, code: string) {
+    await this.codeRepository.save({
+      user_email,
+      code,
+    });
+  }
+
+  async deleteCode(user_email: string) {
+    await this.codeRepository.delete({
+      user_email,
+    });
   }
 
   async checkHasCode(user_email: string): Promise<boolean> {
