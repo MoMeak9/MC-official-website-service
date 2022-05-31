@@ -1,30 +1,37 @@
-import { UserController } from '../controller/UserController';
+import { WebsiteController } from '../controller/WebsiteController';
 import { EMethod, IRoute } from '../types';
 
-const basePath = '/api/website';
+const WebsiteBasePath = '/api/website';
+const PaperBasePath = '/api/paper';
 export const WebsiteRoutes: Array<IRoute> = [
   {
     method: EMethod.GET,
-    route: `${basePath}/getArticle`,
-    controller: UserController,
+    route: `${WebsiteBasePath}/getArticle`,
+    controller: WebsiteController,
     action: 'getArticle',
   },
   {
     method: EMethod.GET,
-    route: `${basePath}/getServerInfo`,
-    controller: UserController,
+    route: `${WebsiteBasePath}/getServerInfo`,
+    controller: WebsiteController,
     action: 'getServerInfo',
   },
   {
     method: EMethod.POST,
-    route: `${basePath}/uploadFile`,
-    controller: UserController,
+    route: `${WebsiteBasePath}/uploadFile`,
+    controller: WebsiteController,
     action: 'uploadFile',
   },
   {
     method: EMethod.GET,
-    route: `${basePath}/updatePVNum`,
-    controller: UserController,
+    route: `${WebsiteBasePath}/updatePVNum`,
+    controller: WebsiteController,
     action: 'updatePVNum',
+  },
+  {
+    method: EMethod.POST,
+    route: `${PaperBasePath}/submitPaper`,
+    controller: WebsiteController,
+    action: 'submitPaper',
   },
 ];

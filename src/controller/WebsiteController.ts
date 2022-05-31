@@ -15,7 +15,7 @@ export class WebsiteController {
     const { score, percentScore } = this.WebsiteService.getScore(paper_content);
     await this.WebsiteService.addPaper({
       user_uuid,
-      paper_content,
+      paper_content: JSON.stringify(paper_content),
       paper_percent: percentScore,
       paper_score: score,
       id,

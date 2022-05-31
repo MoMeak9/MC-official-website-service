@@ -17,12 +17,12 @@ export class Paper {
   @Column({ type: 'text' })
   paper_content: string;
 
-  @Column({ length: 11 })
+  @Column({ type: 'tinyint', default: 0 })
   paper_score: number;
 
-  @Column({ length: 11 })
+  @Column({ type: 'tinyint', default: 0 })
   paper_percent: number;
 
-  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
   created_time?: Timestamp;
 }
