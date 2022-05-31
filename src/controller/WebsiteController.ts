@@ -2,6 +2,7 @@ import { NextFunction, Response } from 'express';
 import { Request } from 'express-jwt';
 import { UserService } from '../service/userService';
 import { WebsiteService } from '../service/websiteService';
+import { Success } from '../utils/HttpException';
 
 export class WebsiteController {
   private UserService = new UserService();
@@ -21,9 +22,27 @@ export class WebsiteController {
     });
     if (percentScore >= 60) {
       await this.WebsiteService.addWhitelist(user_game_id);
-
+      await this.WebsiteService.sendPassEmail(user_game_id, user_email);
+      next(
+        new Success(
+          {
+            paper_score: score,
+            paper_percent: percentScore,
+          },
+          '审核自动通过，请查收邮件',
+        ),
+      );
     } else {
-
+      await this.WebsiteService.sendFailPassEmail(user_game_id, user_email);
+      next(
+        new Success(
+          {
+            paper_score: score,
+            paper_percent: percentScore,
+          },
+          '审核未通过，请查收邮件',
+        ),
+      );
     }
   }
 }
