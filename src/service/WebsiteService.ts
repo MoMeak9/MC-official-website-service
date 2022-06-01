@@ -4,6 +4,7 @@ import { Paper } from '../entity/Paper';
 import { commandServer } from '../config/api';
 import { correctPaper } from '../utils/correctPaper';
 import { IPaperQuestion } from '../types';
+import { getPolicy, uploadFile } from '../utils/cos';
 import sendMail from '../utils/sendMail';
 
 export class WebsiteService {
@@ -64,5 +65,35 @@ export class WebsiteService {
       name: 'LightWorldMC', // 服务器名字
       command: `whitelist remove ${user_game_id}`, // 需要执行的命令
     });
+  }
+
+  // 获取COS密钥
+  async getCosSecret() {
+    return await getPolicy();
+  }
+
+  // 文件上传
+  async uploadSingleFile(file) {
+    const { Location, statusCode, error } = await uploadFile(file);
+    if (statusCode === 200) {
+      const strArr = Location.split('/');
+      console.log(strArr);
+      strArr.shift();
+      console.log(strArr);
+
+      return 'https://cdn.lwmc.net' + strArr.reduce((acc, cur) => {
+        if (cur.indexOf('?') !== -1) {
+          return acc;
+        }
+
+        return `${acc}/${cur}`;
+      }, '');
+    }
+
+    return error;
+  }
+
+  async uploadMultipleFile(files) {
+    return await Promise.all(files.map((file) => uploadFile(file)));
   }
 }

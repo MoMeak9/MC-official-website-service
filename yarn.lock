@@ -2369,6 +2369,13 @@ pupa@^2.1.1:
   dependencies:
     escape-goat "^2.0.0"
 
+qcloud-cos-sts@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.npmmirror.com/qcloud-cos-sts/-/qcloud-cos-sts-3.1.0.tgz#02e3198b5c2b100b87182414edcd3fce98c592a0"
+  integrity sha512-qZvW6jVJuIjmhqNrsJAKJ9RtWOHaaWzZ/mVWF3+yRJIaIV0+L08IFfFLgS7g3MRHHRoYYU5Cnv8R071c+2py8A==
+  dependencies:
+    request "^2.88.0"
+
 qs@6.10.3:
   version "6.10.3"
   resolved "https://registry.npmmirror.com/qs/-/qs-6.10.3.tgz#d6cde1b2ffca87b5aa57889816c5f81535e22e8e"
@@ -2465,7 +2472,7 @@ registry-url@^5.0.0:
   dependencies:
     rc "^1.2.8"
 
-request@^2.88.2:
+request@^2.88.0, request@^2.88.2:
   version "2.88.2"
   resolved "https://registry.npmmirror.com/request/download/request-2.88.2.tgz"
   integrity sha1-1zyRhzHLWofaBH4gcjQUb2ZNErM=

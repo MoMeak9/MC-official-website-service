@@ -34,4 +34,23 @@ export const WebsiteRoutes: Array<IRoute> = [
     controller: WebsiteController,
     action: 'submitPaper',
   },
+  {
+    method: EMethod.GET,
+    route: `${WebsiteBasePath}/getCosSecret`,
+    controller: WebsiteController,
+    action: 'getCosSecret',
+  },
+  {
+    method: EMethod.POST,
+    route: `${WebsiteBasePath}/uploadSingleFile`,
+    formData: true,
+    controller: WebsiteController,
+    action: 'uploadSingleFile',
+  },
+  {
+    method: EMethod.POST,
+    route: `${WebsiteBasePath}/addGallery`,
+    controller: WebsiteController,
+    action: 'addGallery',
+  },
 ];

@@ -1,5 +1,5 @@
 import { NextFunction, Response } from 'express';
-import { Request } from 'express-jwt';
+import { Req } from '../types';
 import { UserService } from '../service/userService';
 import { WebsiteService } from '../service/websiteService';
 import { Success } from '../utils/HttpException';
@@ -9,7 +9,7 @@ export class WebsiteController {
   private WebsiteService = new WebsiteService();
 
   // 提交试卷
-  async submitPaper(req: Request, res: Response, next: NextFunction) {
+  async submitPaper(req: Req, res: Response, next: NextFunction) {
     const { paper_content } = req.body;
     const { user_uuid, id, user_game_id, user_email } = req.auth;
     const { score, percentScore } = this.WebsiteService.getScore(paper_content);
@@ -44,5 +44,24 @@ export class WebsiteController {
         ),
       );
     }
+  }
+
+  // 获取COS密钥
+  async getCosSecret(req: Req, res: Response, next: NextFunction) {
+    await this.WebsiteService.getCosSecret();
+    next(new Success('获取成功'));
+  }
+
+  async uploadSingleFile(req: Req, res: Response, next: NextFunction) {
+    const files = req.files;
+    console.log(files);
+    const data = await this.WebsiteService.uploadSingleFile(files[0]);
+    next(new Success(data, '上传成功'));
+  }
+
+  async uploadMultipleFile(req: Req, res: Response, next: NextFunction) {
+    const files = req.files;
+    const data = await this.WebsiteService.uploadMultipleFile(files);
+    next(new Success(data, '上传成功'));
   }
 }

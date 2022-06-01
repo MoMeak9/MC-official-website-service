@@ -11,6 +11,9 @@ import path = require('path');
 import cookieParser = require('cookie-parser');
 import jwt = require('express-jwt');
 
+const multer = require('multer');
+const upload = multer();
+
 AppDataSource.initialize()
   .then(async () => {
     scheduleJobs();
@@ -45,6 +48,7 @@ AppDataSource.initialize()
     Routes.forEach((route) => {
       (app as any)[route.method](
         route.route,
+        route.formData ? upload.array('file', 10) : [],
         // eslint-disable-next-line @typescript-eslint/ban-types
         (req: Request, res: Response, next: Function) => {
           const result = new (route.controller as any)()[route.action](
