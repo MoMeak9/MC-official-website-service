@@ -49,6 +49,13 @@ export const WebsiteRoutes: Array<IRoute> = [
   },
   {
     method: EMethod.POST,
+    route: `${WebsiteBasePath}/uploadMultipleFile`,
+    formData: true,
+    controller: WebsiteController,
+    action: 'uploadMultipleFile',
+  },
+  {
+    method: EMethod.POST,
     route: `${WebsiteBasePath}/addGallery`,
     controller: WebsiteController,
     action: 'addGallery',

@@ -56,12 +56,12 @@ export class WebsiteController {
     const files = req.files;
     console.log(files);
     const data = await this.WebsiteService.uploadSingleFile(files[0]);
-    next(new Success(data, '上传成功'));
+    next(new Success({ fileUrl: data }, '上传成功'));
   }
 
   async uploadMultipleFile(req: Req, res: Response, next: NextFunction) {
     const files = req.files;
     const data = await this.WebsiteService.uploadMultipleFile(files);
-    next(new Success(data, '上传成功'));
+    next(new Success({ fileUrl: data }, '上传成功'));
   }
 }
