@@ -63,6 +63,17 @@ export class UserService {
     });
   }
 
+  async setScore(user_uuid: string, user_score: number) {
+    return await this.userRepository.update(
+      {
+        user_uuid,
+      },
+      {
+        user_score,
+      },
+    );
+  }
+
   async getUserByGameID(user_game_id: string): Promise<Array<User>> {
     return await this.userRepository.find({
       where: {

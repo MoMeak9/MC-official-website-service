@@ -20,6 +20,7 @@ export class WebsiteController {
       paper_score: score,
       id,
     });
+    await this.UserService.setScore(user_uuid, percentScore);
     if (percentScore >= 60) {
       await this.WebsiteService.addWhitelist(user_game_id);
       await this.WebsiteService.sendPassEmail(user_game_id, user_email);
