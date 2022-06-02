@@ -4,8 +4,9 @@ import {
   Column,
   Timestamp,
   CreateDateColumn,
-  UpdateDateColumn,
+  UpdateDateColumn, OneToMany,
 } from 'typeorm';
+import {Gallery} from './Gallery';
 
 @Entity()
 export class User {
@@ -35,6 +36,9 @@ export class User {
 
   @Column({ length: 128, default: '' })
   user_QQ: string;
+
+  @OneToMany(type => Gallery, galleries => galleries.user)
+  galleries?: Gallery[];
 
   @CreateDateColumn({
     type: 'timestamp',

@@ -13,6 +13,8 @@ export class UserController {
     const { user_password, user_email } = req.body;
     if (user_email == null || user_password == null) {
       next(new ParameterException('参数缺失'));
+
+      return;
     }
     const result = await this.UserService.checkPassword(
       user_password,

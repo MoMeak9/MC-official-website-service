@@ -1,6 +1,7 @@
 import { AppDataSource } from '../data-source';
 import { User } from '../entity/User';
 import { Paper } from '../entity/Paper';
+import { Gallery } from '../entity/Gallery';
 import { commandServer } from '../config/api';
 import { correctPaper } from '../utils/correctPaper';
 import { IPaperQuestion } from '../types';
@@ -10,6 +11,7 @@ import sendMail from '../utils/sendMail';
 export class WebsiteService {
   private userRepository = AppDataSource.getRepository(User);
   private paperRepository = AppDataSource.getRepository(Paper);
+  private galleryRepository = AppDataSource.getRepository(Gallery);
 
   // 新增考试记录
   async addPaper(paper: Paper) {
@@ -73,7 +75,7 @@ export class WebsiteService {
   }
 
   // 文件上传
-  async uploadSingleFile(file) {
+  async uploadSingleFile(file): Promise<string> {
     const { Location, statusCode, error } = await uploadFile(file);
     if (statusCode === 200) {
       const strArr = Location.split('/');
@@ -81,19 +83,27 @@ export class WebsiteService {
       strArr.shift();
       console.log(strArr);
 
-      return 'https://cdn.lwmc.net' + strArr.reduce((acc, cur) => {
-        if (cur.indexOf('?') !== -1) {
-          return acc;
-        }
+      return (
+        'https://cdn.lwmc.net' +
+        strArr.reduce((acc, cur) => {
+          if (cur.indexOf('?') !== -1) {
+            return acc;
+          }
 
-        return `${acc}/${cur}`;
-      }, '');
+          return `${acc}/${cur}`;
+        }, '')
+      );
     }
 
-    return error;
+    return error.toString();
   }
 
+  // 多个小文件上传
   async uploadMultipleFile(files) {
     return await Promise.all(files.map((file) => uploadFile(file)));
+  }
+
+  async addGallery(gallery: Gallery) {
+    return await this.galleryRepository.save(gallery);
   }
 }

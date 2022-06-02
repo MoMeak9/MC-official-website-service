@@ -2,25 +2,22 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  Timestamp,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToOne,
+  ManyToOne,
 } from 'typeorm';
 import { User } from './User';
-import { JoinColumn } from 'typeorm/browser';
 
 @Entity()
 export class Gallery {
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
 
   @Column()
   img_url: string;
 
-  @OneToOne(() => User)
-  @JoinColumn()
-  user_uuid: User;
+  @ManyToOne((type) => User, (user) => user.galleries)
+  user?: User;
 
   @Column()
   title: string;
@@ -28,19 +25,16 @@ export class Gallery {
   @Column()
   description: string;
 
-  @Column()
-  image: string;
-
   @Column({ default: 0 })
-  status: number;
+  status?: number;
 
   @CreateDateColumn({
-    default: () => 'CURRENT_TIMESTAMP',
+    type: 'datetime',
   })
-  created_time?: Timestamp;
+  created_time?: Date;
 
   @UpdateDateColumn({
-    default: () => 'CURRENT_TIMESTAMP',
+    type: 'datetime',
   })
-  updated_time?: Timestamp;
+  updated_time?: Date;
 }

@@ -2,7 +2,7 @@ import { NextFunction, Response } from 'express';
 import { Req } from '../types';
 import { UserService } from '../service/userService';
 import { WebsiteService } from '../service/websiteService';
-import { Success } from '../utils/HttpException';
+import { ServerError, Success } from '../utils/HttpException';
 
 export class WebsiteController {
   private UserService = new UserService();
@@ -64,5 +64,23 @@ export class WebsiteController {
     const files = req.files;
     const data = await this.WebsiteService.uploadMultipleFile(files);
     next(new Success({ fileUrl: data }, '上传成功'));
+  }
+
+  async addGallery(req: Req, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.auth;
+      const { title, description } = req.body;
+      const files = req.files;
+      const fileUrl = await this.WebsiteService.uploadSingleFile(files[0]);
+      const data = await this.WebsiteService.addGallery({
+        user: id,
+        img_url: fileUrl,
+        title,
+        description,
+      });
+      next(new Success(data, '添加成功'));
+    } catch (e) {
+      next(new ServerError('服务器异常'));
+    }
   }
 }

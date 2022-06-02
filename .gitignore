@@ -108,3 +108,4 @@ dist
 /serverless.yml
 /layer/
 /layer/
+.vscode/settings.json

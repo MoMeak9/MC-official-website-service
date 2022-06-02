@@ -56,7 +56,8 @@ export const WebsiteRoutes: Array<IRoute> = [
   },
   {
     method: EMethod.POST,
-    route: `${WebsiteBasePath}/addGallery`,
+    route: `${WebsiteBasePath}/gallery/add`,
+    formData: true,
     controller: WebsiteController,
     action: 'addGallery',
   },
