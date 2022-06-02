@@ -7,6 +7,7 @@ import { correctPaper } from '../utils/correctPaper';
 import { IPaperQuestion } from '../types';
 import { getPolicy, uploadFile } from '../utils/cos';
 import sendMail from '../utils/sendMail';
+import { DeleteResult, UpdateResult } from 'typeorm';
 
 export class WebsiteService {
   private userRepository = AppDataSource.getRepository(User);
@@ -98,12 +99,27 @@ export class WebsiteService {
     return error.toString();
   }
 
-  // 多个小文件上传
+  // 多个小文件上传(好像没啥用)
   async uploadMultipleFile(files) {
     return await Promise.all(files.map((file) => uploadFile(file)));
   }
 
-  async addGallery(gallery: Gallery) {
+  async addGallery(gallery: Gallery): Promise<Gallery> {
     return await this.galleryRepository.save(gallery);
+  }
+
+  async getGallery(currentPage, pageSize): Promise<Gallery[]> {
+    return await this.galleryRepository.find({
+      skip: (currentPage - 1) * pageSize,
+      take: pageSize,
+    });
+  }
+
+  async setGalleryStatus(id: number, status: number): Promise<UpdateResult> {
+    return await this.galleryRepository.update(id, { status });
+  }
+
+  async removeGallery(id: number): Promise<DeleteResult> {
+    return await this.galleryRepository.delete(id);
   }
 }

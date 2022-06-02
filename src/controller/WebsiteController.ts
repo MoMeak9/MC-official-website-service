@@ -80,7 +80,37 @@ export class WebsiteController {
       });
       next(new Success(data, '添加成功'));
     } catch (e) {
-      next(new ServerError('服务器异常'));
+      next(new ServerError());
+    }
+  }
+
+  async setGalleryStatus(req: Req, res: Response, next: NextFunction) {
+    try {
+      const { id, status } = req.body;
+      const data = await this.WebsiteService.setGalleryStatus(id, status);
+      next(new Success(data, '设置成功'));
+    } catch (e) {
+      next(new ServerError());
+    }
+  }
+
+  async getGallerys(req: Req, res: Response, next: NextFunction) {
+    try {
+      const { currentPage, pageSize } = req.query;
+      const data = await this.WebsiteService.getGallery(currentPage, pageSize);
+      next(new Success(data, '获取成功'));
+    } catch (e) {
+      next(new ServerError());
+    }
+  }
+
+  async removeGallery(req: Req, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.body;
+      const data = await this.WebsiteService.removeGallery(id);
+      next(new Success(data, '删除成功'));
+    } catch (e) {
+      next(new ServerError());
     }
   }
 }
