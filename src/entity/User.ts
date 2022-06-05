@@ -2,11 +2,11 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  Timestamp,
   CreateDateColumn,
   UpdateDateColumn, OneToMany,
 } from 'typeorm';
 import {Gallery} from './Gallery';
+import {SponsorRecord} from './SponsorRecord';
 
 @Entity()
 export class User {
@@ -37,20 +37,21 @@ export class User {
   @Column({ length: 128, default: '' })
   user_QQ: string;
 
-  @OneToMany(type => Gallery, galleries => galleries.user)
+  @OneToMany(() => Gallery, galleries => galleries.user)
   galleries?: Gallery[];
 
+  @OneToMany(() => SponsorRecord, sponsorRecords => sponsorRecords.user)
+  sponsorRecords?: SponsorRecord[];
+
   @CreateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
+    type: 'datetime',
   })
-  create_time?: Timestamp;
+  create_time?: Date;
 
   @UpdateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
+    type: 'datetime',
   })
-  update_time?: Timestamp;
+  update_time?: Date;
 
   @Column({ default: 0 })
   user_is_ban?: number;

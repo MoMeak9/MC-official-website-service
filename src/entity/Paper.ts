@@ -3,7 +3,7 @@ import {
   Column,
   Entity,
   Timestamp,
-  CreateDateColumn,
+  CreateDateColumn, UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
@@ -23,6 +23,13 @@ export class Paper {
   @Column({ type: 'tinyint', default: 0 })
   paper_percent: number;
 
-  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
-  created_time?: Timestamp;
+  @CreateDateColumn({
+    type: 'datetime',
+  })
+  create_time?: Date;
+
+  @UpdateDateColumn({
+    type: 'datetime',
+  })
+  update_time?: Date;
 }

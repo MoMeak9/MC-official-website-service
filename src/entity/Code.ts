@@ -3,7 +3,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   Timestamp,
-  CreateDateColumn,
+  CreateDateColumn, UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
@@ -18,8 +18,7 @@ export class Code {
   user_email: string;
 
   @CreateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
+    type: 'datetime',
   })
-  code_time: Timestamp;
+  create_time?: Date;
 }

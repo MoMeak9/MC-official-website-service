@@ -28,14 +28,12 @@ export class Article {
   user_uuid: string;
 
   @CreateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
+    type: 'datetime',
   })
-  create_time: Timestamp;
+  create_time?: Date;
 
   @UpdateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
+    type: 'datetime',
   })
-  update_time: Timestamp;
+  update_time?: Date;
 }

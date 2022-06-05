@@ -3,7 +3,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   Timestamp,
-  CreateDateColumn,
+  CreateDateColumn, UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
@@ -18,8 +18,12 @@ export class Counter {
   count_num: number;
 
   @CreateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
+    type: 'datetime',
   })
-  update_time?: Timestamp;
+  create_time?: Date;
+
+  @UpdateDateColumn({
+    type: 'datetime',
+  })
+  update_time?: Date;
 }

@@ -7,27 +7,21 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class Question {
+export class TeamMember {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 16 })
-  question_type: string;
+  @Column()
+  image_url: string;
 
   @Column()
-  question_title: string;
+  name: string;
 
   @Column()
-  question_text: string;
+  role: string;
 
   @Column()
-  question_option: string;
-
-  @Column()
-  question_answer: string;
-
-  @Column()
-  question_score: number;
+  description: string;
 
   @CreateDateColumn({
     type: 'datetime',

@@ -25,15 +25,12 @@ export class LeaveMessage {
   userAvatar: string;
 
   @CreateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
+    type: 'datetime',
   })
-  createdAt: Timestamp;
+  create_time?: Date;
 
   @UpdateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
-    onUpdate: 'CURRENT_TIMESTAMP(6)',
+    type: 'datetime',
   })
-  updatedAt: Timestamp;
+  update_time?: Date;
 }
