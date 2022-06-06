@@ -1,13 +1,14 @@
 import { NextFunction, Response } from 'express';
 import { Request } from 'express-jwt';
 import { UserService } from '../service/userService';
-import { ParameterException, Success } from '../utils/HttpException';
+import { Forbidden, ParameterException, Success } from '../utils/HttpException';
 import { v4 } from 'uuid';
 import { md5 } from '../utils';
 import { PWD_SALT } from '../config';
 
 export class UserController {
   private UserService = new UserService();
+  private static UserService: UserService;
 
   async login(req: Request, res: Response, next: NextFunction): Promise<void> {
     const { user_password, user_email } = req.body;
@@ -94,5 +95,20 @@ export class UserController {
         userBean: (await this.UserService.getUserByUUID(user_uuid))[0],
       }),
     );
+  }
+
+  // 用户权限校验(管理员)
+  static async checkAuth(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    console.log(req.auth);
+    const { user_uuid } = req.auth;
+    if (!user_uuid) {
+      next(new ParameterException('参数缺失'));
+    }
+    const user = (await this.UserService.getUserByUUID(user_uuid))[0];
+    user.user_role === 1 ? next() : next(new Forbidden('权限不足'));
   }
 }

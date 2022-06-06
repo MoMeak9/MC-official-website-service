@@ -17,13 +17,13 @@ export const SponsorRoutes: Array<IRoute> = [
   },
   {
     method: EMethod.PUT,
-    route: `${basePath}/updateSponsor/:id`,
+    route: `${basePath}/:id`,
     controller: SponsorController,
     action: 'updateSponsor',
   },
   {
     method: EMethod.DELETE,
-    route: `${basePath}/deleteSponsor/:id`,
+    route: `${basePath}/:id`,
     controller: SponsorController,
     action: 'deleteSponsor',
   },

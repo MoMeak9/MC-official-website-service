@@ -7,6 +7,7 @@ import { SponsorService } from '../service/SponsorService';
 import { UserService } from '../service/UserService';
 import { Request } from 'express-jwt';
 import { NextFunction, Response } from 'express';
+import { UserController } from './UserController';
 
 export class SponsorController {
   private sponsorService: SponsorService = new SponsorService();
@@ -59,7 +60,8 @@ export class SponsorController {
     res: Response,
     next: NextFunction,
   ): Promise<void> {
-    const { id, number, userId } = req.body;
+    const id = parseInt(req.params.id);
+    const { number, userId } = req.body;
     const sponsor = await this.sponsorService.updateSponsor({
       id,
       number,
@@ -77,11 +79,11 @@ export class SponsorController {
     next: NextFunction,
   ): Promise<void> {
     const id = parseInt(req.params['id']);
-    const sponsor = await this.sponsorService.deleteSponsorById(id);
-    if (!sponsor) {
-      next(new ServerError('删除失败'));
+    const { affected } = await this.sponsorService.deleteSponsorById(id);
+    if (!affected) {
+      next(new ParameterException('记录不存在'));
     }
-    next(new Success(sponsor, '删除成功'));
+    next(new Success(affected, '删除成功'));
   }
 
   async getSponsorList(
@@ -99,6 +101,7 @@ export class SponsorController {
       page,
       pageSize,
     );
+    // await UserController.checkAuth(req, res, next);
     if (!sponsorRecords) {
       next(new ParameterException('没有查询到数据'));
     }

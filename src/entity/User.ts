@@ -28,6 +28,10 @@ export class User {
   @Column({ default: 0 })
   user_score?: number;
 
+  // 权限等级 0 - 3
+  @Column({ default: 0 })
+  user_role?: number;
+
   @Column({ default: 0 })
   is_whitelist?: number;
 
