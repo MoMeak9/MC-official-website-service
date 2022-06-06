@@ -9,7 +9,7 @@ import {
 @Entity()
 export class Period {
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
 
   @Column()
   name: string;
@@ -20,15 +20,15 @@ export class Period {
   @Column()
   image_url: string;
 
-  @Column()
-  startDate: Date;
+  @Column({ type: 'datetime' })
+  start_time: Date;
 
-  @Column()
-  endDate: Date;
+  @Column({ type: 'datetime' })
+  end_time: Date;
 
   @CreateDateColumn({ type: 'datetime' })
-  create_time: Date;
+  create_time?: Date;
 
   @UpdateDateColumn({ type: 'datetime' })
-  update_time: Date;
+  update_time?: Date;
 }

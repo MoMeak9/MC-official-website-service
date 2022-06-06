@@ -113,4 +113,87 @@ export class WebsiteController {
       next(new ServerError());
     }
   }
+
+  // 团队成员管理
+  async addTeamMember(req: Req, res: Response, next: NextFunction) {
+    try {
+      const { name, image_url, description, role } = req.body;
+      const data = await this.WebsiteService.addTeamMember({
+        name,
+        image_url,
+        role,
+        description,
+      });
+      next(new Success(data, '添加成功'));
+    } catch (e) {
+      next(new ServerError());
+    }
+  }
+
+  async getTeamMembers(req: Req, res: Response, next: NextFunction) {
+    try {
+      const { page, pageSize } = req.query;
+      const data = await this.WebsiteService.getTeamMember(page, pageSize);
+      next(new Success(data, '获取成功'));
+    } catch (e) {
+      next(new ServerError());
+    }
+  }
+
+  async deleteTeamMember(req: Req, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.body;
+      const data = await this.WebsiteService.deleteTeamMember(id);
+      next(new Success(data, '删除成功'));
+    } catch (e) {
+      next(new ServerError());
+    }
+  }
+
+  // 周目管理
+  async addPeriod(req: Req, res: Response, next: NextFunction) {
+    try {
+      const { name, description, start_time, end_time, image_url } = req.body;
+      const data = await this.WebsiteService.addPeriod({
+        name,
+        description,
+        start_time,
+        end_time,
+        image_url,
+      });
+      next(new Success(data, '添加成功'));
+    } catch (e) {
+      next(new ServerError());
+    }
+  }
+
+  async getPeriods(req: Req, res: Response, next: NextFunction) {
+    try {
+      const { page, pageSize } = req.query;
+      const data = await this.WebsiteService.getPeriod(page, pageSize);
+      next(new Success(data, '获取成功'));
+    } catch (e) {
+      next(new ServerError());
+    }
+  }
+
+  async updatePeriod(req: Req, res: Response, next: NextFunction) {
+    try {
+      const { id, period } = req.body;
+      const data = await this.WebsiteService.updatePeriod(id, period);
+      next(new Success(data, '更新成功'));
+    } catch (e) {
+      next(new ServerError());
+    }
+  }
+
+  async deletePeriod(req: Req, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.body;
+      const data = await this.WebsiteService.deletePeriod(id);
+      next(new Success(data, '删除成功'));
+    } catch (e) {
+      next(new ServerError());
+    }
+  }
 }

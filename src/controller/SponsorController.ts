@@ -3,9 +3,9 @@ import {
   ServerError,
   Success,
 } from '../utils/HttpException';
+import { Req } from '../types';
 import { SponsorService } from '../service/SponsorService';
 import { UserService } from '../service/UserService';
-import { Request } from 'express-jwt';
 import { NextFunction, Response } from 'express';
 import { UserController } from './UserController';
 
@@ -14,7 +14,7 @@ export class SponsorController {
   private userService: UserService = new UserService();
 
   async getSponsors(
-    req: Request,
+    req: Req,
     res: Response,
     next: NextFunction,
   ): Promise<void> {
@@ -35,7 +35,7 @@ export class SponsorController {
   }
 
   async createSponsor(
-    req: Request,
+    req: Req,
     res: Response,
     next: NextFunction,
   ): Promise<void> {
@@ -56,7 +56,7 @@ export class SponsorController {
   }
 
   async updateSponsor(
-    req: Request,
+    req: Req,
     res: Response,
     next: NextFunction,
   ): Promise<void> {
@@ -74,7 +74,7 @@ export class SponsorController {
   }
 
   async deleteSponsor(
-    req: Request,
+    req: Req,
     res: Response,
     next: NextFunction,
   ): Promise<void> {
@@ -87,7 +87,7 @@ export class SponsorController {
   }
 
   async getSponsorList(
-    req: Request,
+    req: Req,
     res: Response,
     next: NextFunction,
   ): Promise<void> {
@@ -105,6 +105,16 @@ export class SponsorController {
     if (!sponsorRecords) {
       next(new ParameterException('没有查询到数据'));
     }
-    next(new Success(sponsorRecords, '查询成功'));
+    next(
+      new Success(
+        {
+          sponsorList: sponsorRecords,
+          page,
+          pageSize,
+          total: sponsorRecords.length,
+        },
+        '查询成功',
+      ),
+    );
   }
 }

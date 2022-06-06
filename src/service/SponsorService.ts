@@ -28,16 +28,16 @@ export class SponsorService {
   }
 
   async getSponsorList(page, pageSize) {
-    return await this.sponsorsRepository
-      .createQueryBuilder('sponsor')
-      .leftJoinAndSelect('sponsor.user', 'user')
-      .where('sponsor.number > 0')
-      .groupBy('user.user_game_id')
-      .select('user.user_game_id, SUM(sponsor.number) AS total_number')
-      .orderBy('total_number', 'DESC')
-      .skip((page - 1) * pageSize)
-      .take(pageSize)
-      .getRawMany();
+    return (
+      await this.sponsorsRepository
+        .createQueryBuilder('sponsor')
+        .leftJoinAndSelect('sponsor.user', 'user')
+        .where('sponsor.number > 0')
+        .groupBy('user.user_game_id')
+        .select('user.user_game_id, SUM(sponsor.number) AS total_number')
+        .orderBy('total_number', 'DESC')
+        .getRawMany()
+    ).slice((page - 1) * pageSize, page * pageSize);
   }
 
   async createSponsor(sponsor: SponsorRecord): Promise<SponsorRecord> {

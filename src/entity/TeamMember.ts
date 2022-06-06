@@ -9,7 +9,7 @@ import {
 @Entity()
 export class TeamMember {
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
 
   @Column()
   image_url: string;

@@ -27,7 +27,7 @@ inputs:
     environment: release
     customDomains:
       - domain: dev.lwmc.net
-        certId: ''
+        certId: wTqwX2Gd
         protocols:
           - https
         pathMap:

@@ -2,6 +2,8 @@ import { AppDataSource } from '../data-source';
 import { User } from '../entity/User';
 import { Paper } from '../entity/Paper';
 import { Gallery } from '../entity/Gallery';
+import { TeamMember } from '../entity/TeamMember';
+import { Period } from '../entity/Period';
 import { commandServer } from '../config/api';
 import { correctPaper } from '../utils/correctPaper';
 import { IPaperQuestion } from '../types';
@@ -13,6 +15,8 @@ export class WebsiteService {
   private userRepository = AppDataSource.getRepository(User);
   private paperRepository = AppDataSource.getRepository(Paper);
   private galleryRepository = AppDataSource.getRepository(Gallery);
+  private teamMemberRepository = AppDataSource.getRepository(TeamMember);
+  private periodRepository = AppDataSource.getRepository(Period);
 
   // 新增考试记录
   async addPaper(paper: Paper) {
@@ -108,9 +112,9 @@ export class WebsiteService {
     return await this.galleryRepository.save(gallery);
   }
 
-  async getGallery(currentPage, pageSize): Promise<Gallery[]> {
+  async getGallery(page, pageSize): Promise<Gallery[]> {
     return await this.galleryRepository.find({
-      skip: (currentPage - 1) * pageSize,
+      skip: (page - 1) * pageSize,
       take: pageSize,
     });
   }
@@ -121,5 +125,54 @@ export class WebsiteService {
 
   async removeGallery(id: number): Promise<DeleteResult> {
     return await this.galleryRepository.delete(id);
+  }
+
+  // 团队成员管理
+  async addTeamMember(teamMember: TeamMember): Promise<TeamMember> {
+    return await this.teamMemberRepository.save(teamMember);
+  }
+
+  async deleteTeamMember(id: number): Promise<DeleteResult> {
+    return await this.teamMemberRepository.delete(id);
+  }
+
+  async getTeamMember(page, pageSize): Promise<TeamMember[]> {
+    return await this.teamMemberRepository.find({
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    });
+  }
+
+  async updateTeamMember(
+    id: number,
+    teamMember: TeamMember,
+  ): Promise<UpdateResult> {
+    return await this.teamMemberRepository.update(id, teamMember);
+  }
+
+  // 周目管理
+  async addPeriod(period: Period): Promise<Period> {
+    return await this.periodRepository.save(period);
+  }
+
+  async getPeriod(page, pageSize): Promise<Period[]> {
+    return await this.periodRepository.find({
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    });
+  }
+
+  async updatePeriod(id: number, period: Period): Promise<Period> {
+    let data = await this.periodRepository.findOne({ where: { id } });
+    data = {
+      ...data,
+      ...period,
+    };
+
+    return await this.periodRepository.save(data);
+  }
+
+  async deletePeriod(id: number): Promise<DeleteResult> {
+    return await this.periodRepository.delete(id);
   }
 }
