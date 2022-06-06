@@ -11,17 +11,17 @@ import { User } from './User';
 @Entity()
 export class SponsorRecord {
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
 
   @ManyToOne(() => User, (user) => user.sponsorRecords)
-  user?: User;
+  user: User;
 
   @Column({ type: 'float' })
   number: number;
 
   @CreateDateColumn({ type: 'datetime' })
-  create_time: Date;
+  create_time?: Date;
 
   @UpdateDateColumn({ type: 'datetime' })
-  update_time: Date;
+  update_time?: Date;
 }

@@ -5,6 +5,7 @@ import { md5 } from '../utils';
 import { EXPIRES, PRIVATE_KEY, PWD_SALT } from '../config';
 import sendMail from '../utils/sendMail';
 import jwt = require('jsonwebtoken');
+import {Forbidden} from '../utils/HttpException';
 
 const userSelect = {
   id: true,
@@ -162,5 +163,11 @@ export class UserService {
       take: pageSize,
       select: userSelect,
     });
+  }
+
+  // 权限校验
+  checkPermission(role: string): boolean {
+    role === 'admin' || role === 'user';
+    throw new Forbidden('没有权限');
   }
 }
