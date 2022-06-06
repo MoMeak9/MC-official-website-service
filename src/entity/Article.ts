@@ -18,7 +18,7 @@ export class Article {
   @Column({ length: 100 })
   article_subtitle: string;
 
-  @Column({ type: 'text', length: 100 })
+  @Column({ type: 'text'})
   article_content: string;
 
   @Column({ length: 100 })

@@ -2,18 +2,6 @@ const config = {
   PRIVATE_KEY: 'NodeBlogFoMYTOKEN',
   EXPIRES: 60 * 60 * 24,
   serverAddress: '',
-  whitelist: [
-    '/api/user/register',
-    '/api/user/sendCode',
-    '/api/user/login',
-    '/api/user/getAllUsers',
-    '/api/website/getServerInfo',
-    '/api/website/updateVisitorNum',
-    '/api/article/detail',
-    '/api/article/classify',
-    /^\/api\/api-docs.*/,
-    /^\/\/uploads\/\/.*/,
-  ],
   KEY: '',
   config: {
     proxy: '',
@@ -50,6 +38,7 @@ export const whitelist = [
   '/api/website/updateVisitorNum',
   '/api/article/detail',
   '/api/article/classify',
+  '/api/sponsor/list',
   /^\/api\/api-docs.*/,
   /^\/\/uploads\/\/.*/,
 ];

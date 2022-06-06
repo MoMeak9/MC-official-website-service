@@ -5,7 +5,7 @@ import { md5 } from '../utils';
 import { EXPIRES, PRIVATE_KEY, PWD_SALT } from '../config';
 import sendMail from '../utils/sendMail';
 import jwt = require('jsonwebtoken');
-import {Forbidden} from '../utils/HttpException';
+import { Forbidden } from '../utils/HttpException';
 
 const userSelect = {
   id: true,
@@ -51,6 +51,14 @@ export class UserService {
         id: true,
         user_email: true,
         code: true,
+      },
+    });
+  }
+
+  async getUserById(id: number):Promise<User> {
+    return await this.userRepository.findOne({
+      where: {
+        id,
       },
     });
   }
@@ -167,7 +175,10 @@ export class UserService {
 
   // 权限校验
   checkPermission(role: string): boolean {
-    role === 'admin' || role === 'user';
-    throw new Forbidden('没有权限');
+    if (role === 'admin' || role === 'user') {
+      throw new Forbidden('没有权限');
+    }
+
+    return false;
   }
 }
