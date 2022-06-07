@@ -35,6 +35,8 @@ export const whitelist = [
   '/api/user/login',
   '/api/user/getAllUsers',
   '/api/website/getServerInfo',
+  '/api/website/teamMember',
+  '/api/website/period',
   '/api/website/updateVisitorNum',
   '/api/article/detail',
   '/api/article/classify',

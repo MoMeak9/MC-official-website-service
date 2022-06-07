@@ -130,13 +130,18 @@ export class WebsiteController {
     }
   }
 
-  async getTeamMembers(req: Req, res: Response, next: NextFunction) {
+  async getTeamMember(req: Req, res: Response, next: NextFunction) {
     try {
-      const { page, pageSize } = req.query;
+      const page =
+        typeof req.query.page === 'string' ? parseInt(req.query.page) : 1;
+      const pageSize =
+        typeof req.query.pageSize === 'string'
+          ? parseInt(req.query.pageSize)
+          : 10;
       const data = await this.WebsiteService.getTeamMember(page, pageSize);
       next(new Success(data, '获取成功'));
     } catch (e) {
-      next(new ServerError());
+      next(new ServerError(e));
     }
   }
 
@@ -146,7 +151,7 @@ export class WebsiteController {
       const data = await this.WebsiteService.deleteTeamMember(id);
       next(new Success(data, '删除成功'));
     } catch (e) {
-      next(new ServerError());
+      next(new ServerError(e));
     }
   }
 
@@ -156,25 +161,26 @@ export class WebsiteController {
       const { name, description, start_time, end_time, image_url } = req.body;
       const data = await this.WebsiteService.addPeriod({
         name,
+        start_time: start_time || new Date(),
+        end_time: end_time || new Date(),
         description,
-        start_time,
-        end_time,
         image_url,
       });
       next(new Success(data, '添加成功'));
     } catch (e) {
-      next(new ServerError());
+      next(new ServerError(e));
     }
   }
 
-  async getPeriods(req: Req, res: Response, next: NextFunction) {
-    try {
-      const { page, pageSize } = req.query;
-      const data = await this.WebsiteService.getPeriod(page, pageSize);
-      next(new Success(data, '获取成功'));
-    } catch (e) {
-      next(new ServerError());
-    }
+  async getPeriod(req: Req, res: Response, next: NextFunction) {
+    const page =
+      typeof req.query.page === 'string' ? parseInt(req.query.page) : 1;
+    const pageSize =
+      typeof req.query.pageSize === 'string'
+        ? parseInt(req.query.pageSize)
+        : 10;
+    const data = await this.WebsiteService.getPeriod(page, pageSize);
+    next(new Success(data, '获取成功'));
   }
 
   async updatePeriod(req: Req, res: Response, next: NextFunction) {

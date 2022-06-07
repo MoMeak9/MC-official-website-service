@@ -66,28 +66,27 @@ export const WebsiteRoutes: Array<IRoute> = [
     method: EMethod.GET,
     route: `${WebsiteBasePath}/period`,
     controller: WebsiteController,
-    action: 'getWeek',
+    action: 'getPeriod',
   },
   {
     method: EMethod.POST,
     route: `${WebsiteBasePath}/period`,
-    formData: true,
     controller: WebsiteController,
-    action: 'addWeek',
+    action: 'addPeriod',
   },
   {
     method: EMethod.PUT,
     route: `${WebsiteBasePath}/period/:id`,
     formData: true,
     controller: WebsiteController,
-    action: 'updateWeek',
+    action: 'updatePeriod',
   },
   {
     method: EMethod.DELETE,
     route: `${WebsiteBasePath}/period/:id`,
     formData: true,
     controller: WebsiteController,
-    action: 'deleteWeek',
+    action: 'deletePeriod',
   },
   // 团队成员管理
   {

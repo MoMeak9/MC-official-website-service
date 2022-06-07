@@ -11,20 +11,20 @@ export class Period {
   @PrimaryGeneratedColumn()
   id?: number;
 
-  @Column()
+  @Column({ default: '' })
   name: string;
 
-  @Column()
+  @Column({ default: '' })
   description: string;
 
-  @Column()
+  @Column({ default: '' })
   image_url: string;
 
   @Column({ type: 'datetime' })
-  start_time: Date;
+  start_time?: Date;
 
   @Column({ type: 'datetime' })
-  end_time: Date;
+  end_time?: Date;
 
   @CreateDateColumn({ type: 'datetime' })
   create_time?: Date;
