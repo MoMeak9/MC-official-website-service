@@ -16,7 +16,7 @@ export class Gallery {
   @Column()
   img_url: string;
 
-  @ManyToOne((type) => User, (user) => user.galleries)
+  @ManyToOne(() => User, (user) => user.galleries)
   user?: User;
 
   @Column()

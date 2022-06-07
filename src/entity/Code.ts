@@ -2,8 +2,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  Timestamp,
-  CreateDateColumn, UpdateDateColumn,
+  CreateDateColumn,
 } from 'typeorm';
 
 @Entity()

@@ -1,35 +1,35 @@
 import { SponsorController } from '../controller/SponsorController';
 import { EMethod, IRoute } from '../types';
 
-const basePath = '/api/sponsor';
+const SponsorBasePath = '/api/sponsor';
 export const SponsorRoutes: Array<IRoute> = [
   {
     method: EMethod.GET,
-    route: `${basePath}`,
+    route: `${SponsorBasePath}`,
     controller: SponsorController,
     action: 'getSponsors',
   },
   {
     method: EMethod.POST,
-    route: `${basePath}`,
+    route: `${SponsorBasePath}`,
     controller: SponsorController,
     action: 'createSponsor',
   },
   {
     method: EMethod.PUT,
-    route: `${basePath}/:id`,
+    route: `${SponsorBasePath}/:id`,
     controller: SponsorController,
     action: 'updateSponsor',
   },
   {
     method: EMethod.DELETE,
-    route: `${basePath}/:id`,
+    route: `${SponsorBasePath}/:id`,
     controller: SponsorController,
     action: 'deleteSponsor',
   },
   {
     method: EMethod.GET,
-    route: `${basePath}/list`,
+    route: `${SponsorBasePath}/list`,
     controller: SponsorController,
     action: 'getSponsorList',
   },

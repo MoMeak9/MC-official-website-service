@@ -8,6 +8,7 @@ inputs:
       - .gitignore
       - src
       - .idea
+  replace: true
   faas:
     framework: express
     name: '${name}'

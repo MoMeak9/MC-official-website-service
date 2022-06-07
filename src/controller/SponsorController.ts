@@ -7,7 +7,6 @@ import { Req } from '../types';
 import { SponsorService } from '../service/SponsorService';
 import { UserService } from '../service/UserService';
 import { NextFunction, Response } from 'express';
-import { UserController } from './UserController';
 
 export class SponsorController {
   private sponsorService: SponsorService = new SponsorService();
