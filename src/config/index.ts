@@ -40,6 +40,7 @@ export const whitelist = [
   '/api/website/updateVisitorNum',
   '/api/article/detail',
   '/api/article/classify',
+  '/api/website/gallery',
   '/api/sponsor/list',
   /^\/api\/api-docs.*/,
   /^\/\/uploads\/\/.*/,
