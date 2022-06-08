@@ -113,10 +113,12 @@ export class WebsiteService {
   }
 
   async getGallery(page = 1, pageSize = 10): Promise<Gallery[]> {
-    return await this.galleryRepository.find({
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-    });
+    return await this.galleryRepository
+      .createQueryBuilder('gallery')
+      .select(['gallery.img_url AS src', 'gallery.title AS info'])
+      .skip((page - 1) * pageSize)
+      .take(pageSize)
+      .getRawMany();
   }
 
   async setGalleryStatus(id: number, status: number): Promise<UpdateResult> {
