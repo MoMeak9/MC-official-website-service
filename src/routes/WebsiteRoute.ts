@@ -54,9 +54,31 @@ export const WebsiteRoutes: Array<IRoute> = [
     controller: WebsiteController,
     action: 'uploadMultipleFile',
   },
+  // 画廊内容
   {
     method: EMethod.POST,
-    route: `${WebsiteBasePath}/gallery/add`,
+    route: `${WebsiteBasePath}/gallery`,
+    formData: true,
+    controller: WebsiteController,
+    action: 'addGallery',
+  },
+  {
+    method: EMethod.GET,
+    route: `${WebsiteBasePath}/gallery`,
+    formData: true,
+    controller: WebsiteController,
+    action: 'getGallery',
+  },
+  {
+    method: EMethod.POST,
+    route: `${WebsiteBasePath}/gallery/setStatus`,
+    formData: true,
+    controller: WebsiteController,
+    action: 'setGalleryStatus',
+  },
+  {
+    method: EMethod.DELETE,
+    route: `${WebsiteBasePath}/gallery/:id`,
     formData: true,
     controller: WebsiteController,
     action: 'addGallery',

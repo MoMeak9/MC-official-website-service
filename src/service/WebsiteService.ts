@@ -112,7 +112,7 @@ export class WebsiteService {
     return await this.galleryRepository.save(gallery);
   }
 
-  async getGallery(page, pageSize): Promise<Gallery[]> {
+  async getGallery(page = 1, pageSize = 10): Promise<Gallery[]> {
     return await this.galleryRepository.find({
       skip: (page - 1) * pageSize,
       take: pageSize,
