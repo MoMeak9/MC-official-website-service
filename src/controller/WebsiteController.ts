@@ -22,8 +22,12 @@ export class WebsiteController {
     });
     await this.UserService.setScore(user_uuid, percentScore);
     if (percentScore >= 60) {
-      await this.WebsiteService.addWhitelist(user_game_id);
-      await this.WebsiteService.sendPassEmail(user_game_id, user_email);
+      try {
+        await this.WebsiteService.addWhitelist(user_game_id);
+        await this.WebsiteService.sendPassEmail(user_game_id, user_email);
+      } catch (e) {
+        next(new ServerError(e));
+      }
       next(
         new Success(
           {

@@ -61,15 +61,16 @@ export class WebsiteService {
   }
 
   async addWhitelist(user_game_id: string) {
+    const user = await this.userRepository.findOne({ where: { user_game_id } });
+    user.is_whitelist = 1;
+    await this.userRepository.save(user);
     await commandServer({
-      name: 'LightWorldMC', // 服务器名字
       command: `whitelist add ${user_game_id}`, // 需要执行的命令
     });
   }
 
   async removeWhitelist(user_game_id: string) {
     await commandServer({
-      name: 'LightWorldMC', // 服务器名字
       command: `whitelist remove ${user_game_id}`, // 需要执行的命令
     });
   }
