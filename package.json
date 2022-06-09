@@ -4,15 +4,15 @@
   "description": "",
   "main": "sls.js",
   "scripts": {
-    "pro": "set NODE_ENV=production && prisma generate && nodemon src/app.ts",
-    "dev": "set NODE_ENV=development && prisma generate && nodemon src/app.ts",
-    "build": "tsc && prisma generate",
-    "deploy": "yarn install --production && prisma generate && serverless deploy"
+    "pro": "set NODE_ENV=production && nodemon src/app.ts",
+    "dev": "set NODE_ENV=development && nodemon src/app.ts",
+    "build": "tsc && node build/app.js",
+    "deploy": "tsc && yarn install --production && serverless deploy && yarn install",
+    "start": "ts-node src/index.ts",
+    "typeorm": "typeorm-ts-node-commonjs"
   },
-  "author": "yugasun",
   "license": "MIT",
   "dependencies": {
-    "@prisma/client": "^3.14.0",
     "axios": "^0.27.2",
     "body-parser": "^1.20.0",
     "cookie-parser": "^1.4.6",
@@ -23,16 +23,20 @@
     "http-errors": "^2.0.0",
     "jsonwebtoken": "^8.5.1",
     "multer": "^1.4.4",
+    "mysql": "^2.18.1",
     "node-schedule": "^2.1.0",
     "nodemailer": "^6.7.5",
-    "prisma": "^3.14.0",
+    "qcloud-cos-sts": "^3.1.0",
+    "reflect-metadata": "^0.1.13",
     "store": "^2.0.12",
+    "typeorm": "0.3.6",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
     "@types/multer": "^1.4.7",
-    "@types/node": "^17.0.35",
+    "@types/node": "^16.11.10",
     "@typescript-eslint/eslint-plugin": "^5.26.0",
     "@typescript-eslint/parser": "^5.26.0",
     "eslint": "^8.3.0",
@@ -40,7 +44,7 @@
     "eslint-plugin-prettier": "^3.3.1",
     "nodemon": "^2.0.15",
     "prettier": "2.5.0",
-    "ts-node": "^10.4.0",
-    "typescript": "^4.5.2"
+    "ts-node": "10.7.0",
+    "typescript": "4.5.2"
   }
 }

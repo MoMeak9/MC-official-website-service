@@ -1,11 +1,6 @@
-type paperQuestion = {
-  type?: string;
-  score?: number;
-  content?: string;
-  solution?: string;
-};
+import { IPaperQuestion } from '../types';
 
-module.exports = function (paper_content: Array<paperQuestion>) {
+export const correctPaper = (paper_content: Array<IPaperQuestion>) => {
   let score = 0;
   let percentScore = 0,
     sum = 0;

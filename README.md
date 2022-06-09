@@ -1,10 +1,10 @@
-# demo-express-http
+# MC-official-website-service
 
-原先自个MC服务器官网小试牛刀的demo，使用TypeScript + Express 编写，分层为service 业务层和routes路由（对应Nest的Controller控制层）。ORM 使用 Prisma ，默认MySQL，中间件只先制作了请求过滤（http-error-fliter）。
+原先自个MC服务器官网小试牛刀的demo，已经使用TypeScript + Express 编写，分层为Service,Controller,Routes。ORM 使用 Typeorm  ，默认MySQL，中间件添加了总的错误处理。
 
-附带swagger，勤劳一点写注释哦，没得装饰器~
+Api文档使用ApiPost，见[辉光世界服务端Api]()
 
-该项目将用Nest.js + TypeScript 重构并持续迭代，所以本库后续没有更新啦~ [地址](https://github.com/MoMeak9/MC-nest-service)
+
 
 ## 实现功能
 
@@ -26,6 +26,13 @@
 
 - [x] 提交问卷
 - [x] 自动审核问卷
+
+### 画廊
+
+- [ ] 上传图片
+- [ ] 审核图片
+- [ ] 下载图片
+- [ ] 画廊瀑布流展示
 
 ### Admin
 

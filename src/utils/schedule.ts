@@ -1,6 +1,3 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
 const schedule = require('node-schedule');
 
 // 定义规则
@@ -13,11 +10,5 @@ export function scheduleJobs() {
 }
 
 function clearNum() {
-  schedule.scheduleJob('0 0 0 * * *', () => {
-    try {
-      prisma.counter.update({ where: { id: 2 }, data: { count_num: 0 } });
-    } catch (err) {
-      console.log(err);
-    }
-  });
+  schedule.scheduleJob('0 0 0 * * *', () => {});
 }
