@@ -84,7 +84,7 @@ export class WebsiteController {
       });
       next(new Success(data, '添加成功'));
     } catch (e) {
-      next(new ServerError(e));
+      next(new ServerError(`添加失败：${e}`));
     }
   }
 
@@ -109,7 +109,7 @@ export class WebsiteController {
       const data = await this.WebsiteService.getGallery(page, pageSize);
       next(new Success(data, '获取成功'));
     } catch (e) {
-      next(new ServerError(e));
+      next(new ServerError(`添加失败：${e}`));
     }
   }
 

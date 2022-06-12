@@ -57,7 +57,7 @@ export const WebsiteRoutes: Array<IRoute> = [
   // 画廊内容
   {
     method: EMethod.POST,
-    route: `${WebsiteBasePath}/gallery`,
+    route: `${WebsiteBasePath}/gallery/add`,
     formData: true,
     controller: WebsiteController,
     action: 'addGallery',
