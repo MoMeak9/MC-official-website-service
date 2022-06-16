@@ -204,13 +204,13 @@ export class UserService {
 
   // 查看留言
   async getAllMessage(
-    user_uuid,
+    sender,
     current,
     pageSize,
   ): Promise<Array<LeaveMessage>> {
     return await this.leaveMessageRepository.find({
       where: {
-        user_uuid,
+        sender,
       },
       order: {
         id: 'DESC',
@@ -233,10 +233,5 @@ export class UserService {
     return await this.leaveMessageRepository.delete({
       id,
     });
-  }
-
-  // 更新留言
-  async updateMessage(message: LeaveMessage): Promise<LeaveMessage> {
-    return await this.leaveMessageRepository.save(message);
   }
 }

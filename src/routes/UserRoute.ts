@@ -54,4 +54,25 @@ export const UserRoutes: Array<IRoute> = [
     controller: UserController,
     action: 'changePassword',
   },
+  {
+    // 查看留言
+    method: EMethod.GET,
+    route: `${UserBasePath}/message`,
+    controller: UserController,
+    action: 'getMessage',
+  },
+  {
+    // 新增留言
+    method: EMethod.POST,
+    route: `${UserBasePath}/message`,
+    controller: UserController,
+    action: 'createMessage',
+  },
+  {
+    // 删除留言
+    method: EMethod.DELETE,
+    route: `${UserBasePath}/message/:id`,
+    controller: UserController,
+    action: 'deleteMessage',
+  },
 ];

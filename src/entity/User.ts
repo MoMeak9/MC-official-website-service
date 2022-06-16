@@ -48,8 +48,11 @@ export class User {
   @OneToMany(() => SponsorRecord, sponsorRecords => sponsorRecords.user)
   sponsorRecords?: SponsorRecord[];
 
-  @OneToMany(() => LeaveMessage, sponsorRecords => sponsorRecords.user)
-  leaveMessages?: LeaveMessage[];
+  @OneToMany(() => LeaveMessage, sponsorRecords => sponsorRecords.sender)
+  sent_messages?: LeaveMessage[];
+
+  @OneToMany(() => LeaveMessage, sponsorRecords => sponsorRecords.receiver)
+  receive_messages?: LeaveMessage[];
 
   @CreateDateColumn({
     type: 'datetime',

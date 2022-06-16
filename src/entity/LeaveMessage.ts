@@ -16,14 +16,11 @@ export class LeaveMessage {
   @Column({ type: 'text', nullable: false})
   content: string;
 
-  @ManyToOne(() => User, (user) => user.leaveMessages)
-  user: User;
+  @ManyToOne(() => User, (user) => user.sent_messages)
+  sender: User;
 
-  @Column()
-  message_to: string;
-
-  @Column()
-  user_uuid: string;
+  @ManyToOne(() => User, (user) => user.receive_messages)
+  receiver: User;
 
   @CreateDateColumn({
     type: 'datetime',
