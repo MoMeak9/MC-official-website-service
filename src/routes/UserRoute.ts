@@ -50,7 +50,7 @@ export const UserRoutes: Array<IRoute> = [
   {
     // 用户更改密码
     method: EMethod.POST,
-    route: `${UserBasePath}/changePassword`,
+    route: `${UserBasePath}/password`,
     controller: UserController,
     action: 'changePassword',
   },
