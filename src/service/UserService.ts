@@ -1,11 +1,13 @@
 import { AppDataSource } from '../data-source';
 import { User } from '../entity/User';
+import { LeaveMessage } from '../entity/LeaveMessage';
 import { Code } from '../entity/Code';
 import { md5 } from '../utils';
 import { EXPIRES, PRIVATE_KEY, PWD_SALT } from '../config';
 import sendMail from '../utils/sendMail';
 import jwt = require('jsonwebtoken');
 import { Forbidden } from '../utils/HttpException';
+import { DeleteResult } from 'typeorm';
 
 const userSelect = {
   id: true,
@@ -20,6 +22,7 @@ const userSelect = {
 export class UserService {
   private userRepository = AppDataSource.getRepository(User);
   private codeRepository = AppDataSource.getRepository(Code);
+  private leaveMessageRepository = AppDataSource.getRepository(LeaveMessage);
 
   async checkPassword(
     user_password: string,
@@ -34,6 +37,16 @@ export class UserService {
       },
       select: userSelect,
     });
+  }
+
+  async updatePassword(id: number, new_password: string) {
+    const user = await this.userRepository.findOne({
+      where: {
+        id,
+      },
+    });
+    user.user_password = md5(new_password + PWD_SALT);
+    await this.userRepository.save(user);
   }
 
   async signToken(user: User): Promise<string> {
@@ -55,7 +68,7 @@ export class UserService {
     });
   }
 
-  async getUserById(id: number):Promise<User> {
+  async getUserById(id: number): Promise<User> {
     return await this.userRepository.findOne({
       where: {
         id,
@@ -158,7 +171,14 @@ export class UserService {
     }, 300000);
   }
 
-  async updateUser(user: User): Promise<User> {
+  async updateUser(user_uuid: string, info): Promise<User> {
+    let user = await this.userRepository.findOne({
+      where: {
+        user_uuid,
+      },
+    });
+    user = { ...user, ...info };
+
     return await this.userRepository.save(user);
   }
 
@@ -180,5 +200,43 @@ export class UserService {
     }
 
     return false;
+  }
+
+  // 查看留言
+  async getAllMessage(
+    user_uuid,
+    current,
+    pageSize,
+  ): Promise<Array<LeaveMessage>> {
+    return await this.leaveMessageRepository.find({
+      where: {
+        user_uuid,
+      },
+      order: {
+        id: 'DESC',
+      },
+      skip: (current - 1) * pageSize,
+      take: pageSize,
+      select: {
+        id: true,
+      },
+    });
+  }
+
+  // 新增留言
+  async createMessage(message: LeaveMessage): Promise<LeaveMessage> {
+    return await this.leaveMessageRepository.save(message);
+  }
+
+  // 删除留言
+  async deleteMessage(id: number): Promise<DeleteResult> {
+    return await this.leaveMessageRepository.delete({
+      id,
+    });
+  }
+
+  // 更新留言
+  async updateMessage(message: LeaveMessage): Promise<LeaveMessage> {
+    return await this.leaveMessageRepository.save(message);
   }
 }

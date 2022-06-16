@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import {Gallery} from './Gallery';
 import {SponsorRecord} from './SponsorRecord';
+import {LeaveMessage} from './LeaveMessage';
 
 @Entity()
 export class User {
@@ -46,6 +47,9 @@ export class User {
 
   @OneToMany(() => SponsorRecord, sponsorRecords => sponsorRecords.user)
   sponsorRecords?: SponsorRecord[];
+
+  @OneToMany(() => LeaveMessage, sponsorRecords => sponsorRecords.user)
+  leaveMessages?: LeaveMessage[];
 
   @CreateDateColumn({
     type: 'datetime',

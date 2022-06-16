@@ -1,6 +1,7 @@
 import { NextFunction, Response } from 'express';
 import { Request } from 'express-jwt';
 import { UserService } from '../service/userService';
+import { WebsiteService } from '../service/websiteService';
 import { Forbidden, ParameterException, Success } from '../utils/HttpException';
 import { v4 } from 'uuid';
 import { md5 } from '../utils';
@@ -8,8 +9,10 @@ import { PWD_SALT } from '../config';
 
 export class UserController {
   private UserService = new UserService();
+  private WebsiteService = new WebsiteService();
   private static UserService: UserService;
 
+  // 用户登入
   async login(req: Request, res: Response, next: NextFunction): Promise<void> {
     const { user_password, user_email } = req.body;
     if (user_email == null || user_password == null) {
@@ -29,6 +32,7 @@ export class UserController {
     }
   }
 
+  // 用户注册
   async register(
     req: Request,
     res: Response,
@@ -57,6 +61,55 @@ export class UserController {
     }
   }
 
+  // 用户更改密码
+  async changePassword(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    const { id, user_email } = req.auth;
+    const { user_password, new_password } = req.body;
+    const result = await this.UserService.checkPassword(
+      user_password,
+      user_email,
+    );
+    if (result.length !== 0) {
+      await this.UserService.updatePassword(id, new_password);
+      next(new Success({}, '修改成功'));
+    } else {
+      next(new ParameterException('原始密码错误'));
+    }
+  }
+
+  // 更新用户头像
+  async updateAvatar(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    const { user_uuid } = req.auth;
+    const files = req.files;
+    const user_image_url = await this.WebsiteService.uploadSingleFile(files[0]);
+    await this.UserService.updateUser(user_uuid, { user_image_url });
+    next(new Success({}, '更新成功'));
+  }
+
+  // 更改用户个人信息
+  async updateUserInfo(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    const { user_uuid } = req.auth;
+    const { user_game_id, user_QQ } = req.body;
+    await this.UserService.updateUser(user_uuid, {
+      user_game_id,
+      user_QQ,
+    });
+    next(new Success({}, '更新成功'));
+  }
+
+  // 发送验证码
   async sendCode(
     req: Request,
     res: Response,
@@ -76,6 +129,7 @@ export class UserController {
     }
   }
 
+  // 获取用户列表
   async list(req: Request, res: Response, next: NextFunction): Promise<void> {
     const { current, pageSize } = req.body;
     next(new Success(await this.UserService.getAllUser(current, pageSize)));
@@ -111,4 +165,25 @@ export class UserController {
     const user = (await this.UserService.getUserByUUID(user_uuid))[0];
     user.user_role === 1 ? next() : next(new Forbidden('权限不足'));
   }
+
+  // 用户间留言
+  async leaveMessage(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    const { user_uuid, message_content, receive_user, userId } = req.body;
+    if (!user_uuid || !message_content) {
+      next(new ParameterException('参数缺失'));
+    }
+    await this.UserService.createMessage({
+      content: message_content,
+      user_uuid,
+      message_to: receive_user,
+      user: userId,
+    });
+    next(new Success({}, '留言成功'));
+  }
+
+  // 查询留言记录
 }

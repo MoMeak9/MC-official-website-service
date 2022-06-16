@@ -70,7 +70,7 @@ AppDataSource.initialize()
     });
     // start express server
     app.listen(9000, () => {
-      console.log(`app listening at http://localhost:${9000}`);
+      console.log(`app [${process.env.NODE_ENV.trim()}] listening at http://localhost:${9000}`);
     });
 
     // error handler

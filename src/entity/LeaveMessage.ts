@@ -4,24 +4,26 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
 } from 'typeorm';
+import { User } from './User';
 
 @Entity()
 export class LeaveMessage {
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
 
-  @Column()
+  @Column({ type: 'text', nullable: false})
   content: string;
 
+  @ManyToOne(() => User, (user) => user.leaveMessages)
+  user: User;
+
   @Column()
-  userId: number;
+  message_to: string;
 
   @Column()
   user_uuid: string;
-
-  @Column()
-  userAvatar: string;
 
   @CreateDateColumn({
     type: 'datetime',

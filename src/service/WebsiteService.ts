@@ -39,17 +39,19 @@ export class WebsiteService {
     return correctPaper(paper_content);
   }
 
+  // 发送通过邮件
   async sendPassEmail(user_game_id, user_email) {
     await sendMail({
       email: user_email,
       content: `
         <p style='text-indent: 2em;'>亲爱的${user_game_id}：</p>
         <p style='text-indent: 2em;'>您通过了我们的白名单审核！白名单将在1分钟内生效。
-        <p style='text-indent: 2em;'>服务器地址：game.lwmc.net</p>
+        <p style='text-indent: 2em;'>服务器地址：game.lwmc.net:3456</p>
         <p style='text-align: right;'>—— 辉光世界|LightWorld</p>`,
     });
   }
 
+  // 发送通过失败邮件
   async sendFailPassEmail(user_game_id, user_email) {
     await sendMail({
       email: user_email,
@@ -60,6 +62,7 @@ export class WebsiteService {
     });
   }
 
+  // 添加白名单
   async addWhitelist(user_game_id: string) {
     const user = await this.userRepository.findOne({ where: { user_game_id } });
     user.is_whitelist = 1;
@@ -69,6 +72,7 @@ export class WebsiteService {
     });
   }
 
+  // 删除白名单
   async removeWhitelist(user_game_id: string) {
     await commandServer({
       command: `whitelist remove ${user_game_id}`, // 需要执行的命令
@@ -101,7 +105,7 @@ export class WebsiteService {
       );
     }
 
-    return error.toString();
+    throw new Error(error.toString());
   }
 
   // 多个小文件上传(好像没啥用)
@@ -117,6 +121,7 @@ export class WebsiteService {
     return await this.galleryRepository
       .createQueryBuilder('gallery')
       .select(['gallery.img_url AS src', 'gallery.title AS info'])
+      .where('gallery.status = 1')
       .skip((page - 1) * pageSize)
       .take(pageSize)
       .getRawMany();

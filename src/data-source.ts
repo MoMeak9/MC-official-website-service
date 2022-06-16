@@ -4,7 +4,10 @@ import entity from './entity';
 import 'dotenv/config';
 
 export const AppDataSource = new DataSource({
-  url: process.env.DATABASE_URL || 'mysql://root:root@localhost:3306/test',
+  url:
+    process.env.NODE_ENV.trim() === 'development'
+      ? process.env.DATABASE_URL
+      : process.env.DATABASE_URL_PRODUCTION,
   type: 'mysql',
   synchronize: true,
   logging: false,

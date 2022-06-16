@@ -34,18 +34,21 @@ export const UserRoutes: Array<IRoute> = [
     action: 'getAllUsers',
   },
   {
-    method: EMethod.POST,
-    route: `${UserBasePath}/updateUserInfo`,
+    method: EMethod.PUT,
+    route: `${UserBasePath}`,
     controller: UserController,
     action: 'updateUserInfo',
   },
   {
-    method: EMethod.POST,
-    route: `${UserBasePath}/updateUserImg`,
+    // 更新用户头像
+    method: EMethod.PUT,
+    route: `${UserBasePath}/avatar`,
+    formData: true,
     controller: UserController,
-    action: 'updateUserImg',
+    action: 'updateAvatar',
   },
   {
+    // 用户更改密码
     method: EMethod.POST,
     route: `${UserBasePath}/changePassword`,
     controller: UserController,
