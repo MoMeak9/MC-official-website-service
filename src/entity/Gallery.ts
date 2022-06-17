@@ -31,10 +31,10 @@ export class Gallery {
   @CreateDateColumn({
     type: 'datetime',
   })
-  created_time?: Date;
+  create_time?: Date;
 
   @UpdateDateColumn({
     type: 'datetime',
   })
-  updated_time?: Date;
+  update_time?: Date;
 }

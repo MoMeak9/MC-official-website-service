@@ -10,6 +10,7 @@ import { IPaperQuestion } from '../types';
 import { getPolicy, uploadFile } from '../utils/cos';
 import sendMail from '../utils/sendMail';
 import { DeleteResult, UpdateResult } from 'typeorm';
+import { ServerError } from '../utils/HttpException';
 
 export class WebsiteService {
   private userRepository = AppDataSource.getRepository(User);
@@ -117,22 +118,42 @@ export class WebsiteService {
     return await this.galleryRepository.save(gallery);
   }
 
+  // 获取画廊列表
   async getGallery(page = 1, pageSize = 10): Promise<Gallery[]> {
     return await this.galleryRepository
       .createQueryBuilder('gallery')
-      .select(['gallery.img_url AS src', 'gallery.title AS info'])
+      .leftJoinAndSelect('gallery.user', 'user')
+      .select([
+        'gallery.img_url AS src',
+        'gallery.title AS info',
+        'gallery.id',
+        'gallery.create_time',
+        'gallery.update_time',
+        'user.user_game_id AS user_game_id',
+      ])
       .where('gallery.status = 1')
       .skip((page - 1) * pageSize)
       .take(pageSize)
       .getRawMany();
   }
 
-  async setGalleryStatus(id: number, status: number): Promise<UpdateResult> {
-    return await this.galleryRepository.update(id, { status });
+  //设置画廊状态
+  async setGalleryStatus(id: number, status: number): Promise<Gallery> {
+    const gallery = await this.galleryRepository.findOne({ where: { id } });
+    gallery.status = status;
+
+    return await this.galleryRepository.save(gallery);
   }
 
-  async removeGallery(id: number): Promise<DeleteResult> {
-    return await this.galleryRepository.delete(id);
+  //删除画廊
+  async removeGallery(id: number): Promise<Gallery> {
+    const gallery = await this.galleryRepository.findOneOrFail({
+      where: { id },
+    }).catch(() => {
+      throw '画廊不存在';
+    });
+
+    return await this.galleryRepository.remove(gallery);
   }
 
   // 团队成员管理

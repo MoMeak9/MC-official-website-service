@@ -70,18 +70,16 @@ export const WebsiteRoutes: Array<IRoute> = [
     action: 'getGallery',
   },
   {
-    method: EMethod.POST,
-    route: `${WebsiteBasePath}/gallery/setStatus`,
-    formData: true,
+    method: EMethod.PUT,
+    route: `${WebsiteBasePath}/gallery/:id`,
     controller: WebsiteController,
     action: 'setGalleryStatus',
   },
   {
     method: EMethod.DELETE,
     route: `${WebsiteBasePath}/gallery/:id`,
-    formData: true,
     controller: WebsiteController,
-    action: 'addGallery',
+    action: 'removeGallery',
   },
   // 周目管理
   {

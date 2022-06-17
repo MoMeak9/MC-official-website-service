@@ -172,15 +172,14 @@ export class UserController {
     res: Response,
     next: NextFunction,
   ): Promise<void> {
-    const { user_uuid, message_content, receive_user, userId } = req.body;
+    const { user_uuid, message_content, receiver, sender } = req.body;
     if (!user_uuid || !message_content) {
       next(new ParameterException('参数缺失'));
     }
     await this.UserService.createMessage({
+      receiver,
+      sender,
       content: message_content,
-      user_uuid,
-      message_to: receive_user,
-      user: userId,
     });
     next(new Success({}, '留言成功'));
   }

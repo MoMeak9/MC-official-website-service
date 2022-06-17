@@ -17,6 +17,7 @@ const userSelect = {
   user_email: true,
   user_uuid: true,
   user_QQ: true,
+  user_role: true,
 };
 
 export class UserService {

@@ -90,7 +90,8 @@ export class WebsiteController {
 
   async setGalleryStatus(req: Req, res: Response, next: NextFunction) {
     try {
-      const { id, status } = req.body;
+      const id = parseInt(req.params['id']);
+      const { status } = req.body;
       const data = await this.WebsiteService.setGalleryStatus(id, status);
       next(new Success(data, '设置成功'));
     } catch (e) {
@@ -115,7 +116,7 @@ export class WebsiteController {
 
   async removeGallery(req: Req, res: Response, next: NextFunction) {
     try {
-      const { id } = req.body;
+      const id = parseInt(req.params['id']);
       const data = await this.WebsiteService.removeGallery(id);
       next(new Success(data, '删除成功'));
     } catch (e) {
